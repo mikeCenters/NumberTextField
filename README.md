@@ -1,6 +1,6 @@
-# TextFieldFormatting
+# NumberTextField
 ## v0.1.0
-A formatted text field that offers live changes for the end-user.
+A number formatted text field that offers live changes for the end-user.
 
 # Overview:
 This is a Text Field package for SwiftUI that offers live formatting of a textfield. Specifically, this package assists with displaying numbered text labels during user input, while keeping the numbers formatted appropriately. Rather than showing the correct format upon a user committing to a change, Text Field Formatting offers live display during user input.
