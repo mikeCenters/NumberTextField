@@ -11,15 +11,15 @@ import Combine
 
 public struct NumberTextField: View {
     /// The placeholder string for an empty textfield.
-    public var placeholder: String
+    var placeholder: String
     /// The binding value for the text field to render.
-    @Binding public var value: Decimal?
+    @Binding var value: Decimal?
     /// The `NumberFormatter` that will be used for formatting the user input.
-    public var formatter: NumberFormatter
+    var formatter: NumberFormatter
     /// The callback function that is called when the user inputs any change.
-    public var onChange: (Decimal?) -> () = { _ in }
+    var onChange: (Decimal?) -> () = { _ in }
     /// The callback function for when the user commits to their input.
-    public var onCommit: (Decimal?) -> () = { _ in }
+    var onCommit: (Decimal?) -> () = { _ in }
     
     
     public var body: some View {
@@ -39,7 +39,7 @@ extension NumberTextField {
         self.formatter = formatter
     }
     
-    /// Initialize a `NumberTextField` with a `Decimal?` value. 
+    /// Initialize a `NumberTextField` with a `Decimal?` value.
     public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, onChange: @escaping (Decimal?) -> (), onCommit: @escaping (Decimal?) -> ()) {
         self.placeholder = placeholder
         self._value = value
