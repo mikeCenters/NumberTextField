@@ -1,4 +1,5 @@
 # NumberTextField
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 ### v0.1.0
 A powerful SwiftUI text field that handles formatting and retaining number values.
 
@@ -7,6 +8,43 @@ This is a Text Field package for SwiftUI that offers live formatting of a textfi
 
 # Requirements:
     macOS(v12), iOS(v15), tvOS(v15), watchOS(v8)
+
+
+# Usage:
+
+```
+struct ContentView: View {
+    var numberFormatter: NumberFormatter {
+        let f = NumberFormatter()
+        /*
+         Setup your formatter.
+         */
+        f.numberStyle = .percent
+        f.maximumFractionDigits = 5
+        return f
+    }
+    
+    @State var value: Decimal? =  1.5
+    
+    @State var onChangeValue: Decimal?
+    @State var onCommitValue: Decimal?
+    
+    
+    var body: some View {
+        NumberTextField("Enter here...",
+                        value: self.$value,
+                        formatter: self.numberFormatter,
+                        onChange: { num in
+                            self.onChangeValue = num
+                        },
+                        onCommit: { num in
+                            self.onCommitValue = num
+                        })
+    }
+}
+```
+
+
 
 ## Bugs:
     - Non-US-like decimal formats sometimes provide inconsistent behavior with symbols (example: German).
@@ -59,3 +97,6 @@ This is a Text Field package for SwiftUI that offers live formatting of a textfi
 
 # Current:
 Fix the percentage. Figure out how to handle erasing the percent and last char.
+
+
+---
