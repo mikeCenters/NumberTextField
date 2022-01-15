@@ -1,7 +1,7 @@
 # NumberTextField
+A powerful SwiftUI text field that handles formatting and retaining number values.
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 ### v0.1.0
-A powerful SwiftUI text field that handles formatting and retaining number values.
 
 # Overview:
 This is a Text Field package for SwiftUI that offers live formatting of a textfield. Specifically, this package assists with displaying numbered text labels during user input, while keeping the numbers formatted appropriately. Rather than showing the correct format upon a user committing to a change, Text Field Formatting offers live display during user input.
