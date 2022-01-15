@@ -11,13 +11,13 @@ NumberTextField is package for SwiftUI that offers live formatting of a textfiel
 # Requirements:
 
     macOS(v12), iOS(v15), tvOS(v15), watchOS(v8)
-    
+
     *Still under review. iOS building/testing at this time.*
 
 
 # Usage:
 
-```
+```swift
 struct ContentView: View {
     var numberFormatter: NumberFormatter {
         let f = NumberFormatter()
@@ -28,13 +28,13 @@ struct ContentView: View {
         f.maximumFractionDigits = 5
         return f
     }
-    
+
     @State var value: Decimal? =  1.5
-    
+
     @State var onChangeValue: Decimal?
     @State var onCommitValue: Decimal?
-    
-    
+
+
     var body: some View {
         NumberTextField("Enter here...",
                         value: self.$value,
@@ -60,12 +60,12 @@ struct ContentView: View {
 
 - Percentage Formatter:
   - Unable to input a zero after a decimal: "0.01%". Trailing zeroes are filtered?
-        
+
   - UI
     - The keyboard is not changing when assigned in SwiftUI.
     - View is rendered full screen: AutoLayoutConstraints?
 
-        
+
 - Set access control.
 
 
@@ -90,7 +90,7 @@ This property has a default value unique to the `NumberFormatter.numberStyle` pr
 ---
 
 
-# Change Log: 
+# Change Log:
 ## v0.1.0
-    - The initial release. 
+    - The initial release.
     - Currently supports percent format for US or similar decimal formats.
