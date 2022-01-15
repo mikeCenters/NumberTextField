@@ -31,19 +31,16 @@ struct ContentView: View {
 
     @State var value: Decimal? =  1.5
 
-    @State var onChangeValue: Decimal?
-    @State var onCommitValue: Decimal?
-
 
     var body: some View {
         NumberTextField("Enter here...",
                         value: self.$value,
                         formatter: self.numberFormatter,
                         onChange: { num in
-                            self.onChangeValue = num
+                            // num is a Decimal? type
                         },
                         onCommit: { num in
-                            self.onCommitValue = num
+                            // num is a Decimal? type
                         })
     }
 }
