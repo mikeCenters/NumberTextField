@@ -31,6 +31,24 @@ public struct NumberTextField: View {
     }
 }
 
+extension NumberTextField {
+    /// Initialize a `NumberTextField` with a `Decimal?` value.
+    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter) {
+        self.placeholder = placeholder
+        self._value = value
+        self.formatter = formatter
+    }
+    
+    /// Initialize a `NumberTextField` with a `Decimal?` value. 
+    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, onChange: @escaping (Decimal?) -> (), onCommit: @escaping (Decimal?) -> ()) {
+        self.placeholder = placeholder
+        self._value = value
+        self.formatter = formatter
+        self.onChange = onChange
+        self.onCommit = onCommit
+    }
+}
+
 
 #if DEBUG
 // MARK: - Previews
