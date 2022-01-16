@@ -93,7 +93,7 @@ var numberFormatter: NumberFormatter {
     f.maximumFractionDigits = 7
     return f
 }
-```swift
+```
 
 
 ### Formatter Parameters
