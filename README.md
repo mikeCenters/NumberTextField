@@ -5,8 +5,6 @@ A powerful SwiftUI text field that handles formatting and retaining number value
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://github.com/mikeCenters/NumberTextField/blob/main/LICENSE)
 
 
-Testing repo management.
-
 # Overview:
 NumberTextField is package for SwiftUI that offers live formatting of a textfield. Rather than accepting a string for binding, NumberTextField requires an optional Decimal binding. This enables the developer to only worry about the underlying value of the textfield.
 
