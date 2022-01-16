@@ -21,19 +21,26 @@ extension NumberTextFieldViewRep {
         internal var groupingChar: String.Element {
             return Character(self.viewRep.formatter.groupingSeparator ?? ",")
         }
+        /// The currency character for decimal values.
+        internal var currencyChar: String.Element {
+            return Character(self.viewRep.formatter.currencySymbol ?? "")
+        }
+        /// The percent character for decimal values.
+        internal var percentChar: String.Element {
+            return Character(self.viewRep.formatter.percentSymbol ?? "")
+        }
+        
         /// The locale of the text field `NumberFormatter`.
         internal var locale: Locale {
             return self.viewRep.formatter.locale
         }
         
         /// The minimum fractional digits initially set by the provided `NumberFormatter`.
-        internal let definedMinimumFractionalDigits: Int
+        internal var definedMinimumFractionalDigits: Int = 0
         
         
         init(_ viewRep: NumberTextFieldViewRep) {
             self.viewRep = viewRep
-            
-            self.definedMinimumFractionalDigits = viewRep.formatter.minimumFractionDigits
         }
         
         /**
@@ -44,6 +51,8 @@ extension NumberTextFieldViewRep {
          - parameter textField: The `UIOpenTextField` that will be linked to the delegate.
          */
         func setup(_ textField: UIOpenTextField) {
+            self.checkFormatter()
+            
             textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
             textField.addTarget(self, action: #selector(textFieldDidEndEditing), for: .editingDidEnd)
             textField.addTarget(self, action: #selector(textFieldDidBeginEditing), for: .editingDidBegin)
