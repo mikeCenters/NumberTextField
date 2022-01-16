@@ -6,13 +6,13 @@ A powerful SwiftUI text field that handles formatting and retaining number value
 
 
 # Overview:
-NumberTextField is package for SwiftUI that offers live formatting of a textfield. Rather than accepting a string for binding, NumberTextField requires an optional Decimal binding. This enables the developer to only worry about the underlying value of the textfield.
+`NumberTextField` is package for `SwiftUI` that offers live formatting of a textfield. Rather than accepting a string for binding, `NumberTextField` requires an optional Decimal binding. This allows the developer to only worry about the underlying value of the textfield.
 
 # Requirements:
 
     macOS(v12), iOS(v15), tvOS(v15), watchOS(v8)
 
-    *Still under review. iOS building/testing at this time.*
+    * Still under review. iOS building/testing at this time. *
 
 
 # Usage:
@@ -46,38 +46,11 @@ struct ContentView: View {
 }
 ```
 
-
-
-## Bugs:
-- Non-US-like decimal formats sometimes provide inconsistent behavior with symbols (example: German).
-    - Specifically, a whitespace is added before a percent symbol `%` when it should not.
-    - I attempted to remove all whitespaces at assignment during formatting, but it seems to not work.
-    - Requires more investigation.
-
-- UI
-    - The keyboard is not changing when assigned in SwiftUI.
-    - View is rendered full screen: AutoLayoutConstraints?
-    
-- Decimal Value
-    - When a limit is set on the formatter, the value property is not retaining the limits. 
-        - Test whole and fractional limits.
-        - The limit is only applying to the formatted string.
-        - This can likely be resolved with the use of the NumberFormatter during assignment of the value.
-
-- Currency Value
-    - The NumberFormatter.minimumFractionDigit property is not preserved for commit.
-        - This is due to the Coordinator adjusting the minimum value for trailing zeroes.
-        - Resolve this issue by assigning the defined minimum on commit.
-
-- Set access control.
-
-
----
-
+# Discussion
 
 ## NumberFormatter
 
-The `NumberTextField` requires a `NumberFormatter` to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed.
+The `NumberTextField` requires a `NumberFormatter` to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed and emitted.
 
 
 ### Formatter Setup
@@ -96,9 +69,10 @@ var numberFormatter: NumberFormatter {
 ```
 
 
-### Formatter Parameters
+### Formatter Attributes
 
-The `alwaysShowDecimalSeparator` property is manipulated by the `Coordinator`. If the developer chooses to not allow fractional input, set the `maximumFractionalDigits` property to zero.
+#### NumberFormatter.alwaysShowDecimalSeparator
+The `alwaysShowDecimalSeparator` property is manipulated by the `Coordinator`. If the developer chooses to not allow fractional input, set the `maximumFractionalDigits` property to zero. This will also filter the decimal separator from user input.
 
 
 ### Fractional Digits
@@ -109,17 +83,48 @@ This property has a default value unique to the `NumberFormatter.numberStyle` pr
 ---
 
 
-# Change Log:
+# Current Issues / Objectives
+
+*In no particular order*
+
+#### UI
+  - The keyboard is not changing to different types when assigned in SwiftUI.
+  - View is rendered full screen.
+    - AutoLayoutConstraints?
+
+#### Non US-Like Decimal Formats (German)
+  - These formats provide inconsistent behavior with symbols.
+    - Specifically, a whitespace is added before a percent symbol `%` when it should not.
+    - I attempted to remove all whitespaces at assignment during formatting, but it seems to not work.
+    - Requires more investigation.
+
+#### Decimal Value
+  - When a limit is set on the formatter, the value binding is not retaining the limits.
+    - The limit is only applying to the formatted string.
+    - Test whole and fractional limits.
+    - This can likely be resolved with the use of the NumberFormatter during assignment of the value.
+
+#### Currency Value
+  - The `NumberFormatter.minimumFractionDigit` property is not preserved for commit.
+      - This is due to the Coordinator adjusting the minimum value for trailing zeroes.
+        - Resolve this issue by assigning the defined minimum on commit.
+
+#### Access Control
+  - The package needs to be scanned for access control of stuctures and classes prior to major release.
+
+
+# Change Log
+
 ## v0.1.2
     - Added currency format support.
-    
+
     - Fixed issue not allowing trailing zeroes to be input within fractional numbers.
-    
-    
+
+
 ## v0.1.1
     - Added decimal format support.
-    
-    
+
+
 ## v0.1.0
     - The initial release.
     - Currently supports percent format for US or similar decimal formats.
