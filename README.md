@@ -75,9 +75,8 @@ var numberFormatter: NumberFormatter {
 The `alwaysShowDecimalSeparator` property is manipulated by the `Coordinator`. If the developer chooses to not allow fractional input, set the `maximumFractionalDigits` property to zero. This will also filter the decimal separator from user input.
 
 
-### Fractional Digits
-
-This property has a default value unique to the `NumberFormatter.numberStyle` property. If fractional input is not performing as expected, set the `.numberStyle` property appropriately before sending it to the view.
+#### Fractional Digits
+These properties have a default value unique to the `NumberFormatter.numberStyle` property. If fractional input is not performing as expected, set the `.maximumFractionDigits` and `.minimumFractionDigits` in conjunction with the `.numberStyle` property appropriately before sending it to the view.
 
 
 ---
