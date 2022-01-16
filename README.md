@@ -1,8 +1,8 @@
 # NumberTextField
-#### Author: Mike Centers [GitHub](https://github.com/mikeCenters/NumberTextField)
-
+#### Author: Mike Centers
 A powerful SwiftUI text field that handles formatting and retaining number values.
 
+#### [GitHub](https://github.com/mikeCenters/NumberTextField)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://github.com/mikeCenters/NumberTextField/blob/main/LICENSE)
 
 
