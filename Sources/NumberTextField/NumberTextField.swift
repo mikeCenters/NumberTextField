@@ -31,6 +31,7 @@ public struct NumberTextField: View {
     }
 }
 
+
 extension NumberTextField {
     /// Initialize a `NumberTextField` with a `Decimal?` value.
     public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter) {
@@ -64,11 +65,12 @@ struct NumberTextField_Previews: PreviewProvider {
     /// Working.
     static var formatterEnglish: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 4
         formatter.locale = .init(identifier: "en_US")
         return formatter
     }
-    @State static var value: Decimal? = 0.5
+    @State static var value: Decimal? = 12345.123456
     
     static var previews: some View {
         VStack {

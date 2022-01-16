@@ -28,7 +28,7 @@ extension NumberTextFieldViewRep.Coordinator {
             self._withinPercentBounds(textField, cursorPosition: cursorPosition)
             
         default:
-            break
+            return
         }
     }
     
@@ -48,8 +48,5 @@ extension NumberTextFieldViewRep.Coordinator {
         }
         
         textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
-//        DispatchQueue.main.async {
-//            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
-//        }
     }
 }

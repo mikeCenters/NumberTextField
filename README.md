@@ -88,6 +88,9 @@ This property has a default value unique to the `NumberFormatter.numberStyle` pr
 
 
 # Change Log:
+## v0.1.1
+    - Added decimal format support.
+    
 ## v0.1.0
     - The initial release.
     - Currently supports percent format for US or similar decimal formats.

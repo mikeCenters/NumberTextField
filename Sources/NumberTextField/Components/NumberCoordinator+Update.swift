@@ -42,6 +42,15 @@ extension NumberTextFieldViewRep.Coordinator {
             
             textField.text = formattedString
             
+        case .decimal:
+            guard let formattedString = self.viewRep.formatter.string(from: value as NSDecimalNumber)
+            else {
+                textField.text = ""
+                return
+            }
+            
+            textField.text = formattedString
+            
         default:
             guard let formattedString = self.viewRep.formatter.string(from: value as NSDecimalNumber)
             else {
@@ -80,6 +89,9 @@ extension NumberTextFieldViewRep.Coordinator {
         case .percent:
             self._assignPercent(numString)
             
+        case .decimal:
+            self._assignDecimal(numString)
+            
         default:
             break
         }
@@ -103,6 +115,24 @@ extension NumberTextFieldViewRep.Coordinator {
         }
         /// Convert the percent to a decimal via division.
         self.viewRep.value = percent / 100
+    }
+    
+    /**
+     Assign a decimal value.
+     
+     This method accepts a `NumberString` and assigns it's value.
+     
+     - parameter s: The `NumberString` that will be converted into a `Decimal` for the value.
+     */
+    private func _assignDecimal(_ s: NumberString) {
+        guard !s.isEmpty,
+              let decimal = Decimal(string: s, locale: self.locale)
+        else {
+            self.viewRep.value = nil
+            return
+        }
+        
+        self.viewRep.value = decimal
     }
 }
 
