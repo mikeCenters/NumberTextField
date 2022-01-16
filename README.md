@@ -7,7 +7,7 @@ A powerful SwiftUI text field that handles formatting and retaining number value
 
 
 # Overview:
-`NumberTextField` is package for `SwiftUI` that offers live formatting of a textfield. Rather than accepting a string for binding, `NumberTextField` requires an optional Decimal binding. This allows the developer to only worry about the underlying value of the textfield.
+`NumberTextField` is package for `SwiftUI` that offers live formatting of a text field. Rather than accepting a string for binding, `NumberTextField` requires an optional `Decimal` binding. This allows the developer to only worry about the underlying `value` of the text field.
 
 
 # Requirements:
@@ -21,6 +21,7 @@ A powerful SwiftUI text field that handles formatting and retaining number value
 
 ```swift
 struct ContentView: View {
+    /// The formatter responsible for formatting the `value` property.
     var numberFormatter: NumberFormatter {
         let f = NumberFormatter()
         /*
@@ -31,6 +32,7 @@ struct ContentView: View {
         return f
     }
 
+    /// The number being formatted.
     @State var value: Decimal? =  1.5
 
 
@@ -48,10 +50,18 @@ struct ContentView: View {
 }
 ```
 
+# Value
+
+The `value` parameter for the `NumberTextField` is a binding to an optional `Decimal` type. This binding is always updated to the current text field change. The `value` can also have a value assigned prior to binding to the `NumberTextField`, for if the developer wants the user to update the `value`.
+
+###### value = nil
+- This would indicate an empty string or an underlying `nil` text property to the `UIOpenTextField`.
+- In either case, this would indicate no value is assigned to the binding.
+
 
 # NumberFormatter
 
-The `NumberTextField` requires a `NumberFormatter` to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed and emitted. However the `NumberFormatter` is setup, the text field should always respect the attributes set via the developer.
+The `NumberTextField` requires a `NumberFormatter` to operate properly. This parameter allows customization of how numbers are to be displayed and emitted. However the `NumberFormatter` is setup, the `NumberTextField` should always respect the attributes set via the developer.
 
 ## Formatter Setup
 
@@ -73,19 +83,17 @@ var numberFormatter: NumberFormatter {
 
 ## Formatter Attributes
 
-
-### NumberFormatter.alwaysShowDecimalSeparator
-The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`. If the developer chooses to not allow fractional input, set the `.maximumFractionalDigits` attribute to zero. This will also filter the decimal separator from user input.
+### NumberFormatter.numberStyle
+#### Percent
+The `NumberTextField` expects the `value` to be in a decimal format.
+- 100% would be "value = 1.0"
+- 50% would be "value = 0.5"
 
 ### Fractional Digits
 These attributes have a default value unique to the `NumberFormatter.numberStyle` attribute. If fractional input is not performing as expected, set the `.maximumFractionDigits` and `.minimumFractionDigits` attributes to the desired output.
 
-### NumberFormatter.numberStyle
-#### Percent
-The `NumberTextField` expects the `value` to be in a decimal format.
-
-    100% would be "value = 1.0"
-    50% would be "value = 0.5"
+### NumberFormatter.alwaysShowDecimalSeparator
+The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`. If the developer chooses to not allow fractional input, set the `.maximumFractionalDigits` attribute to zero. This will also filter the decimal separator from user input.
 
 
 # Current Issues / Objectives
