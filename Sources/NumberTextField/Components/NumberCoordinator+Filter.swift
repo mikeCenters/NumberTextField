@@ -28,7 +28,7 @@ extension NumberTextFieldViewRep.Coordinator {
         
         /**
          Decimal character exists:
-         Separate the numbers into whole and fractional parts.
+         Separate the number into whole and fractional parts.
          Filter both parts, then return the combined string.
          */
         let firstIndex = s.firstIndex(of: self.decimalChar)!
