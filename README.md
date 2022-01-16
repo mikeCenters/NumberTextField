@@ -54,21 +54,20 @@ struct ContentView: View {
     - I attempted to remove all whitespaces at assignment during formatting, but it seems to not work.
     - Requires more investigation.
 
-
-- Percentage Formatter:
-    - Unable to input a zero after a decimal: "0.01%". Trailing zeroes are filtered?
-
 - UI
     - The keyboard is not changing when assigned in SwiftUI.
     - View is rendered full screen: AutoLayoutConstraints?
     
 - Decimal Value
-    - When a limit is used, the value property is not limited. Test whole and fractional limits.
+    - When a limit is set on the formatter, the value property is not retaining the limits. 
+        - Test whole and fractional limits.
         - The limit is only applying to the formatted string.
         - This can likely be resolved with the use of the NumberFormatter during assignment of the value.
-        
-- NumberFormatter.minimumFractionalDigits is preserving erased digits.
-    - The plan is to provide tracking of erased digits and altering the minimumFractionalDigits property before assignment.
+
+- Currency Value
+    - The NumberFormatter.minimumFractionDigit property is not preserved for commit.
+        - This is due to the Coordinator adjusting the minimum value for trailing zeroes.
+        - Resolve this issue by assigning the defined minimum on commit.
 
 - Set access control.
 
@@ -78,12 +77,27 @@ struct ContentView: View {
 
 ## NumberFormatter
 
-The NumberTextField requires a NumberFormatter to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed.
+The `NumberTextField` requires a `NumberFormatter` to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed.
 
 
-### Global Parameters
+### Formatter Setup
+'''swift
+var numberFormatter: NumberFormatter {
+    let f = NumberFormatter()
+    /*
+     Setup your formatter.
+     */
+    f.numberStyle = .decimal
+    f.minimumFractionDigits = 3
+    f.maximumFractionDigits = 7
+    return f
+}
+'''
 
-The `alwaysShowDecimalSeparator` property is controlled by the `Coordinator`. If the developer chooses to not allow fractional input, set the `maximumFractionalDigits` property to zero.
+
+### Formatter Parameters
+
+The `alwaysShowDecimalSeparator` property is manipulated by the `Coordinator`. If the developer chooses to not allow fractional input, set the `maximumFractionalDigits` property to zero.
 
 
 ### Fractional Digits
@@ -95,8 +109,15 @@ This property has a default value unique to the `NumberFormatter.numberStyle` pr
 
 
 # Change Log:
+## v0.1.2
+    - Added currency format support.
+    
+    - Fixed issue not allowing trailing zeroes to be input within fractional numbers.
+    
+    
 ## v0.1.1
     - Added decimal format support.
+    
     
 ## v0.1.0
     - The initial release.
