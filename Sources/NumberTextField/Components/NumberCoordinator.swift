@@ -29,7 +29,6 @@ extension NumberTextFieldViewRep {
         internal var percentChar: String.Element {
             return Character(self.viewRep.formatter.percentSymbol ?? "")
         }
-        
         /// The locale of the text field `NumberFormatter`.
         internal var locale: Locale {
             return self.viewRep.formatter.locale
