@@ -50,30 +50,41 @@ struct ContentView: View {
 
 # NumberFormatter
 
-The `NumberTextField` requires a `NumberFormatter` to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed and emitted.
+The `NumberTextField` requires a `NumberFormatter` to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed and emitted. However the `NumberFormatter` is setup, the text field should always respect the attributes set via the developer.
 
 ## Formatter Setup
 
 ```swift
 var numberFormatter: NumberFormatter {
     let f = NumberFormatter()
+
     /*
-     Setup your formatter.
+     It is recommended to set the following parameters for every formatter.
+     These can be of whatever value you choose, just make sure they are set.
      */
-    f.numberStyle = .decimal
+    f.numberStyle = .decimal        // Set the style first.
     f.minimumFractionDigits = 3
     f.maximumFractionDigits = 7
+
     return f
 }
 ```
 
 ## Formatter Attributes
 
+
 ### NumberFormatter.alwaysShowDecimalSeparator
-The `alwaysShowDecimalSeparator` property is manipulated by the `Coordinator`. If the developer chooses to not allow fractional input, set the `maximumFractionalDigits` property to zero. This will also filter the decimal separator from user input.
+The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`. If the developer chooses to not allow fractional input, set the `.maximumFractionalDigits` attribute to zero. This will also filter the decimal separator from user input.
 
 ### Fractional Digits
-These properties have a default value unique to the `NumberFormatter.numberStyle` property. If fractional input is not performing as expected, set the `.maximumFractionDigits` and `.minimumFractionDigits` in conjunction with the `.numberStyle` property appropriately before sending it to the view.
+These attributes have a default value unique to the `NumberFormatter.numberStyle` attribute. If fractional input is not performing as expected, set the `.maximumFractionDigits` and `.minimumFractionDigits` attributes to the desired output.
+
+### NumberFormatter.numberStyle
+#### Percent
+The `NumberTextField` expects the `value` to be in a decimal format.
+
+    100% would be "value = 1.0"
+    50% would be "value = 0.5"
 
 
 # Current Issues / Objectives
@@ -96,6 +107,7 @@ These properties have a default value unique to the `NumberFormatter.numberStyle
     - The limit is only applying to the formatted string.
     - Test whole and fractional limits.
     - This can likely be resolved with the use of the NumberFormatter during assignment of the value.
+    - This should also resolve the issue of requiring a minimumFractionDigit of +2 for the correct format.
 
 #### Currency Value
   - The `NumberFormatter.minimumFractionDigit` property is not preserved for commit.
