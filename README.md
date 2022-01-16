@@ -8,6 +8,7 @@ A powerful SwiftUI text field that handles formatting and retaining number value
 # Overview:
 `NumberTextField` is package for `SwiftUI` that offers live formatting of a textfield. Rather than accepting a string for binding, `NumberTextField` requires an optional Decimal binding. This allows the developer to only worry about the underlying value of the textfield.
 
+
 # Requirements:
 
     macOS(v12), iOS(v15), tvOS(v15), watchOS(v8)
@@ -46,14 +47,12 @@ struct ContentView: View {
 }
 ```
 
-# Discussion
 
-## NumberFormatter
+# NumberFormatter
 
 The `NumberTextField` requires a `NumberFormatter` to operate properly. This property is set by the developer and allows customization of how numbers are to be displayed and emitted.
 
-
-### Formatter Setup
+## Formatter Setup
 
 ```swift
 var numberFormatter: NumberFormatter {
@@ -68,18 +67,13 @@ var numberFormatter: NumberFormatter {
 }
 ```
 
+## Formatter Attributes
 
-### Formatter Attributes
-
-#### NumberFormatter.alwaysShowDecimalSeparator
+### NumberFormatter.alwaysShowDecimalSeparator
 The `alwaysShowDecimalSeparator` property is manipulated by the `Coordinator`. If the developer chooses to not allow fractional input, set the `maximumFractionalDigits` property to zero. This will also filter the decimal separator from user input.
 
-
-#### Fractional Digits
+### Fractional Digits
 These properties have a default value unique to the `NumberFormatter.numberStyle` property. If fractional input is not performing as expected, set the `.maximumFractionDigits` and `.minimumFractionDigits` in conjunction with the `.numberStyle` property appropriately before sending it to the view.
-
-
----
 
 
 # Current Issues / Objectives
