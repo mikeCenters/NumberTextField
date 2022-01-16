@@ -96,6 +96,7 @@ extension NumberTextFieldViewRep.Coordinator {
         }
         
         let numString = self.filter(text)
+        
         switch self.viewRep.formatter.numberStyle {
         case .percent:
             self._assignPercent(numString)
@@ -185,10 +186,24 @@ extension NumberTextFieldViewRep.Coordinator {
         }
     }
     
-    
+    /**
+     Set the `NumberFormatter.minimumFractionalDigits` property.
+     
+     This method sets the `NumberFormatter.minimumFractionalDigits`property according to how
+     the text is being entered. When the `textField.text` property is formatted, the minimum fractional
+     digits is applied. This will cause the textfield to insert zeros or prevent the end-user from erasing the
+     textfield.
+     
+     This method also allows the input of trailing zeroes after a decimal separator. When the `NumberFormatter`
+     formats the string, the `viewRep.value` is used to make the formatted string. Trailing zeroes are not
+     preserved on the `Decimal`, thus the formatted string will not show the desired output.
+     
+     - parameter textField: The `UITextField` that is being manipulated.
+     - warning: This method should only be called immediately before formatting and setting the textField's
+     text property.
+     */
     fileprivate func _setMinimumFractionalDigits(_ textField: UITextField) {
-        guard self.definedMinimumFractionalDigits > 0,
-              let text = textField.text,
+        guard let text = textField.text,
               text.contains(self.decimalChar)
         else {
             self.viewRep.formatter.minimumFractionDigits = 0
@@ -197,22 +212,19 @@ extension NumberTextFieldViewRep.Coordinator {
         
         let numString = self.filter(text)
         let formatter = self.viewRep.formatter
+        let numChars = "1234567890"
         /**
          Separate the number into whole and fractional parts.
          Get the count of the fractional numbers.
          Set the `minimumFractionalDigits` property according to the condition.
          */
         let separatorIndex = numString.firstIndex(of: self.decimalChar)!
-        let wholeNumbers = text[..<separatorIndex]
-        let fractionalNumbers = text[separatorIndex...]
+        let fractionalNumbers = numString[separatorIndex...].filter { numChars.contains($0) }
         
-        /// A fractional number is erased.
-        if fractionalNumbers.count < self.definedMinimumFractionalDigits {
+        if fractionalNumbers.count < formatter.maximumFractionDigits {
             formatter.minimumFractionDigits = fractionalNumbers.count
-        
-        /// The minimum fractional digits has been met.
-        } else if fractionalNumbers.count >= self.definedMinimumFractionalDigits {
-            formatter.minimumFractionDigits = self.definedMinimumFractionalDigits
+        } else {
+            formatter.minimumFractionDigits = formatter.maximumFractionDigits
         }
     }
 }
