@@ -51,6 +51,15 @@ extension NumberTextFieldViewRep.Coordinator {
             
             textField.text = formattedString
             
+        case .currency:
+            guard let formattedString = self.viewRep.formatter.string(from: value as NSDecimalNumber)
+            else {
+                textField.text = ""
+                return
+            }
+            
+            textField.text = formattedString
+            
         default:
             guard let formattedString = self.viewRep.formatter.string(from: value as NSDecimalNumber)
             else {
@@ -90,6 +99,9 @@ extension NumberTextFieldViewRep.Coordinator {
             self._assignPercent(numString)
             
         case .decimal:
+            self._assignDecimal(numString)
+            
+        case .currency:
             self._assignDecimal(numString)
             
         default:

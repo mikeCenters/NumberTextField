@@ -65,12 +65,12 @@ struct NumberTextField_Previews: PreviewProvider {
     /// Working.
     static var formatterEnglish: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 4
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 2
         formatter.locale = .init(identifier: "en_US")
         return formatter
     }
-    @State static var value: Decimal? = 12345.123456
+    @State static var value: Decimal? = 12345.678
     
     static var previews: some View {
         VStack {
