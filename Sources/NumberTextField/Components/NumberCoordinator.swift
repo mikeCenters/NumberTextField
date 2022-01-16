@@ -26,9 +26,14 @@ extension NumberTextFieldViewRep {
             return self.viewRep.formatter.locale
         }
         
+        /// The minimum fractional digits initially set by the provided `NumberFormatter`.
+        internal let definedMinimumFractionalDigits: Int
+        
         
         init(_ viewRep: NumberTextFieldViewRep) {
             self.viewRep = viewRep
+            
+            self.definedMinimumFractionalDigits = viewRep.formatter.minimumFractionDigits
         }
         
         /**
