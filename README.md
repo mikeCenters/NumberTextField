@@ -50,18 +50,22 @@ struct ContentView: View {
 
 ## Bugs:
 - Non-US-like decimal formats sometimes provide inconsistent behavior with symbols (example: German).
-  - Specifically, a whitespace is added before a percent symbol `%` when it should not.
-  - I attempted to remove all whitespaces at assignment during formatting, but it seems to not work.
-  - Requires more investigation.
+    - Specifically, a whitespace is added before a percent symbol `%` when it should not.
+    - I attempted to remove all whitespaces at assignment during formatting, but it seems to not work.
+    - Requires more investigation.
 
 
 - Percentage Formatter:
-  - Unable to input a zero after a decimal: "0.01%". Trailing zeroes are filtered?
+    - Unable to input a zero after a decimal: "0.01%". Trailing zeroes are filtered?
 
-  - UI
+- UI
     - The keyboard is not changing when assigned in SwiftUI.
     - View is rendered full screen: AutoLayoutConstraints?
-
+    
+- Decimal Value
+    - When a limit is used, the value property is not limited. Test whole and fractional limits.
+        - The limit is only applying to the formatted string.
+        - This can likely be resolved with the use of the NumberFormatter during assignment of the value.
 
 - Set access control.
 
