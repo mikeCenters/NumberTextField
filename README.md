@@ -81,7 +81,8 @@ The `NumberTextField` requires a `NumberFormatter` to operate properly. This pro
 
 
 ### Formatter Setup
-'''swift
+
+```swift
 var numberFormatter: NumberFormatter {
     let f = NumberFormatter()
     /*
@@ -92,7 +93,7 @@ var numberFormatter: NumberFormatter {
     f.maximumFractionDigits = 7
     return f
 }
-'''
+```swift
 
 
 ### Formatter Parameters
