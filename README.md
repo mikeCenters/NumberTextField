@@ -66,6 +66,9 @@ struct ContentView: View {
     - When a limit is used, the value property is not limited. Test whole and fractional limits.
         - The limit is only applying to the formatted string.
         - This can likely be resolved with the use of the NumberFormatter during assignment of the value.
+        
+- NumberFormatter.minimumFractionalDigits is preserving erased digits.
+    - The plan is to provide tracking of erased digits and altering the minimumFractionalDigits property before assignment.
 
 - Set access control.
 
