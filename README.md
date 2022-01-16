@@ -132,8 +132,8 @@ The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`
 ## v0.1.2
     - Added currency format support.
 
-    - Fixed issue not allowing trailing zeroes to be input within fractional numbers.
-
+    - Fixed issue where input is not allowing trailing zeroes within fractional numbers.
+    
 
 ## v0.1.1
     - Added decimal format support.
