@@ -29,8 +29,10 @@ extension NumberTextFieldViewRep.Coordinator {
             textField.text = ""
             return
         }
-        /// When the string is formatted, the decimal separator is lost. This method preserves the separator.
+        /// Preserve a trailing decimal during formatting.
         self._setDecimalSeparator(textField)
+        /// Alter the minimum digits to prevent interference of user input.
+        self._setMinimumFractionalDigits(textField)
         
         switch self.viewRep.formatter.numberStyle {
         case .percent:
@@ -180,6 +182,37 @@ extension NumberTextFieldViewRep.Coordinator {
             
         } else {
             self.viewRep.formatter.alwaysShowsDecimalSeparator = false
+        }
+    }
+    
+    
+    fileprivate func _setMinimumFractionalDigits(_ textField: UITextField) {
+        guard self.definedMinimumFractionalDigits > 0,
+              let text = textField.text,
+              text.contains(self.decimalChar)
+        else {
+            self.viewRep.formatter.minimumFractionDigits = 0
+            return
+        }
+        
+        let numString = self.filter(text)
+        let formatter = self.viewRep.formatter
+        /**
+         Separate the number into whole and fractional parts.
+         Get the count of the fractional numbers.
+         Set the `minimumFractionalDigits` property according to the condition.
+         */
+        let separatorIndex = numString.firstIndex(of: self.decimalChar)!
+        let wholeNumbers = text[..<separatorIndex]
+        let fractionalNumbers = text[separatorIndex...]
+        
+        /// A fractional number is erased.
+        if fractionalNumbers.count < self.definedMinimumFractionalDigits {
+            formatter.minimumFractionDigits = fractionalNumbers.count
+        
+        /// The minimum fractional digits has been met.
+        } else if fractionalNumbers.count >= self.definedMinimumFractionalDigits {
+            formatter.minimumFractionDigits = self.definedMinimumFractionalDigits
         }
     }
 }
