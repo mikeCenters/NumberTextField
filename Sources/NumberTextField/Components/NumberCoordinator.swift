@@ -105,7 +105,7 @@ extension NumberTextFieldViewRep.Coordinator {
     @objc
     func textFieldDidEndEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
-            self.textField(isEditing: true)
+            self.textField(isEditing: false)
             self.updateText(textField)
             self.viewRep.onCommit(self.viewRep.value)
         }
