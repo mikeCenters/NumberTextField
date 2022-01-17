@@ -125,10 +125,31 @@ The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`
 
 #### Access Control
   - The package needs to be scanned for access control of stuctures and classes prior to major release.
+  
+#### UpdateUI
+    - Will require a catch to check for changes prior to calling the updateText() method.
+```swift
+    func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
+        DispatchQueue.main.async {
+            context.coordinator.updateText(uiView)
+        }
+    }
+```
 
 
 # Change Log
 
+## v0.1.3
+    - Added percent format support.
+    
+    - `NumberFormatter` now assigns the `value` and `text` properties.
+    - Enhanced tracking of text field changes to refactor unnecessary code.
+    - Extended moveCursorWithinBounds() to support percent numbers.
+    
+    Found Bug:
+    - Update text is being called on update of @State value due to the updateUI method of ViewRepresentable.
+        
+    
 ## v0.1.2
     - Added currency format support.
 
