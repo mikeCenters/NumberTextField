@@ -86,8 +86,19 @@ extension NumberTextFieldViewRep.Coordinator {
             self.viewRep.value = nil
             return
         }
-        /// Convert the percent to a decimal via division.
-        self.viewRep.value = percent / 100
+        /*
+         This will not work:
+         self.viewRep.value = self.viewRep.formatter.number(from: "\(percent / 100)")?.decimalValue
+         The formatter does not respect to the .maximumFractionDigits property when making a number.
+         */
+        guard let str = self.viewRep.formatter.string(from: (percent / 100) as NSDecimalNumber),
+              let num = self.viewRep.formatter.number(from: str)
+        else {
+            self.viewRep.value = nil
+            return
+        }
+        
+        self.viewRep.value = num.decimalValue
     }
     
     /**
@@ -105,6 +116,18 @@ extension NumberTextFieldViewRep.Coordinator {
             return
         }
         
-        self.viewRep.value = decimal
+        /*
+         This will not work:
+         self.viewRep.value = self.viewRep.formatter.number(from: "\(decimal)")?.decimalValue
+         The formatter does not respect to the .maximumFractionDigits property when making a number.
+         */
+        guard let str = self.viewRep.formatter.string(from: decimal as NSDecimalNumber),
+              let num = self.viewRep.formatter.number(from: str)
+        else {
+            self.viewRep.value = nil
+            return
+        }
+        
+        self.viewRep.value = num.decimalValue
     }
 }
