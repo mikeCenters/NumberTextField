@@ -54,7 +54,7 @@ struct ContentView: View {
 
 The `value` parameter for the `NumberTextField` is a binding to an optional `Decimal` type. This binding is always updated to the current text field change. The `value` can also have a value assigned prior to binding to the `NumberTextField`, for if the developer wants the user to update the `value`.
 
-###### value = nil
+##### value = nil
 - This would indicate an empty string or an underlying `nil` text property to the `UIOpenTextField`.
 - In either case, this would indicate no value is assigned to the binding.
 
