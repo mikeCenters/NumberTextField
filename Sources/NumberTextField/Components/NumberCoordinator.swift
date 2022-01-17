@@ -34,12 +34,17 @@ extension NumberTextFieldViewRep {
             return self.viewRep.formatter.locale
         }
         
-        /// The minimum fractional digits initially set by the provided `NumberFormatter`.
-        internal var definedMinimumFractionalDigits: Int = 0
+        /// The minimum fractional digits initially set via the provided `NumberFormatter`.
+        internal var definedMinimumFractionalDigits: Int
+        /// The state of text field editing.
+        internal var isEditing: Bool
         
         
         init(_ viewRep: NumberTextFieldViewRep) {
             self.viewRep = viewRep
+            
+            self.isEditing = false
+            self.definedMinimumFractionalDigits = viewRep.formatter.minimumFractionDigits
         }
         
         /**
@@ -50,8 +55,6 @@ extension NumberTextFieldViewRep {
          - parameter textField: The `UIOpenTextField` that will be linked to the delegate.
          */
         func setup(_ textField: UIOpenTextField) {
-            self.checkFormatter()
-            
             textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
             textField.addTarget(self, action: #selector(textFieldDidEndEditing), for: .editingDidEnd)
             textField.addTarget(self, action: #selector(textFieldDidBeginEditing), for: .editingDidBegin)
@@ -60,11 +63,6 @@ extension NumberTextFieldViewRep {
                 DispatchQueue.main.async {
                     self.moveCursorWithinBounds(textField, cursorPosition: position)
                 }
-            }
-            
-            /// Set the initial text property of the textfield.
-            DispatchQueue.main.async {
-                self.updateText(textField)
             }
         }
     }
@@ -76,6 +74,7 @@ extension NumberTextFieldViewRep.Coordinator {
     @objc
     func textFieldDidBeginEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
+            self.textField(isEditing: true)
             self.updateText(textField)
             
             if let text = textField.text {
@@ -87,6 +86,9 @@ extension NumberTextFieldViewRep.Coordinator {
     @objc
     func textFieldDidChange(_ textField: UITextField) {
         DispatchQueue.main.async {
+            self._setDecimalSeparator(textField)
+            self._setMinimumFractionalDigits(textField)
+            
             self.updateValue(textField)
             self.updateText(textField)
             
@@ -103,6 +105,8 @@ extension NumberTextFieldViewRep.Coordinator {
     @objc
     func textFieldDidEndEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
+            self.textField(isEditing: true)
+            self.updateText(textField)
             self.viewRep.onCommit(self.viewRep.value)
         }
     }
