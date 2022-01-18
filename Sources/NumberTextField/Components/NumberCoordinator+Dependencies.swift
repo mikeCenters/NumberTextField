@@ -162,9 +162,7 @@ extension NumberTextFieldViewRep.Coordinator {
         var range: [Int] = [0, 0]
         var startIsFound: Bool = false
         
-        let decimalSeparator = self.viewRep.formatter.decimalSeparator ?? ""
-        let groupingSeparator = self.viewRep.formatter.groupingSeparator ?? ""
-        let characters = "1234567890\(decimalSeparator)\(groupingSeparator)"
+        let characters = "1234567890\(self.decimalChar)\(self.groupingChar)"
         
         for (index, char) in text.enumerated() {
             if characters.contains(char) {

@@ -15,11 +15,11 @@ extension NumberTextFieldViewRep {
         
         /// The decimal character for decimal values.
         internal var decimalChar: String.Element {
-            return Character(self.viewRep.formatter.decimalSeparator ?? ".")
+            return Character(self.viewRep.formatter.decimalSeparator ?? "")
         }
         /// The grouping character for decimal values.
         internal var groupingChar: String.Element {
-            return Character(self.viewRep.formatter.groupingSeparator ?? ",")
+            return Character(self.viewRep.formatter.groupingSeparator ?? "")
         }
         /// The currency character for decimal values.
         internal var currencyChar: String.Element {
