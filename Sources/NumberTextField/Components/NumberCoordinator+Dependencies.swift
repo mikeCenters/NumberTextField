@@ -141,3 +141,56 @@ extension NumberTextFieldViewRep.Coordinator {
         return "\(wholeNumbers)" + "\(self.decimalChar)" + "\(fractionalNumbers)"
     }
 }
+
+
+// MARK: - Cursor
+extension NumberTextFieldViewRep.Coordinator {
+    /**
+     Move the cursor of the `UITextField` within the boundaries of the formatted number.
+     
+     The number formatted `String` will sometimes have symbols that show what the value of the `String`
+     represent (currency, percentage, etc.). This method is used to prevent the cursor from crossing these
+     symbols or whitespaces.
+     
+     - parameter textField: The textfield that will have it's cursor manipulated.
+     - parameter cursorPosition: The index of the cursor's current position.
+     - warning: This method updates the UI and should be called on the main thread.
+     */
+    internal func moveCursorWithinBounds(_ textField: UITextField, cursorPosition: Int) {
+        guard let text = textField.text else { return }
+        
+        var range: [Int] = [0, 0]
+        var startIsFound: Bool = false
+        
+        let decimalSeparator = self.viewRep.formatter.decimalSeparator ?? ""
+        let groupingSeparator = self.viewRep.formatter.groupingSeparator ?? ""
+        let characters = "1234567890\(decimalSeparator)\(groupingSeparator)"
+        
+        for (index, char) in text.enumerated() {
+            if characters.contains(char) {
+                if startIsFound {
+                    /// Addiing one to place the cursor after this character.
+                    range[1] = index + 1
+                    
+                } else {
+                    range[0] = index
+                    range[1] = index
+                    startIsFound = true
+                }
+            }
+        }
+        
+        guard let leadingOffset = textField.position(from: textField.beginningOfDocument, offset: range[0]),
+              let trailingOffset = textField.position(from: textField.beginningOfDocument, offset: range[1])
+        else {
+            return
+        }
+        
+        if cursorPosition < range[0] {
+            textField.selectedTextRange = textField.textRange(from: leadingOffset, to: leadingOffset)
+        
+        } else if cursorPosition > range[1] + 1 {
+            textField.selectedTextRange = textField.textRange(from: trailingOffset, to: trailingOffset)
+        }
+    }
+}
