@@ -21,7 +21,6 @@ A powerful SwiftUI text field that handles formatting and retaining number value
 
 ```swift
 struct ContentView: View {
-    /// The formatter responsible for formatting the `value` property.
     var numberFormatter: NumberFormatter {
         let f = NumberFormatter()
         /*
@@ -32,7 +31,6 @@ struct ContentView: View {
         return f
     }
 
-    /// The number being formatted.
     @State var value: Decimal? =  1.5
 
 
@@ -101,33 +99,30 @@ The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`
 *In no particular order*
 
 #### UI
-  - The keyboard is not changing to different types when assigned in SwiftUI.
-  - View is rendered full screen.
-    - AutoLayoutConstraints?
+    - The keyboard is not changing to different types when assigned in SwiftUI.
 
-#### Non US-Like Decimal Formats (German)
-  - These formats provide inconsistent behavior with symbols.
-    - Specifically, a whitespace is added before a percent symbol `%` when it should not.
-    - I attempted to remove all whitespaces at assignment during formatting, but it seems to not work.
-    - Requires more investigation.
+    - View is rendered full screen.
+        - AutoLayoutConstraints?
 
-#### Decimal Value
-  - When a limit is set on the formatter, the value binding is not retaining the limits.
-    - The limit is only applying to the formatted string.
-    - Test whole and fractional limits.
-    - This can likely be resolved with the use of the NumberFormatter during assignment of the value.
-    - This should also resolve the issue of requiring a minimumFractionDigit of +2 for the correct format.
-
-#### Currency Value
-  - The `NumberFormatter.minimumFractionDigit` property is not preserved for commit.
-      - This is due to the Coordinator adjusting the minimum value for trailing zeroes.
-        - Resolve this issue by assigning the defined minimum on commit.
+    - The text field always places the cursor towards the trailing end of the text field on changes.
+        - The cursor will remain in bounds.
+        - Inserting still works.
+        - This does not break the text field; however, the cursor retaining the position is necessary.
 
 #### Access Control
-  - The package needs to be scanned for access control of stuctures and classes prior to major release.
-  
-#### UpdateUI
+    - The package needs to be scanned for access control of stuctures and classes prior to major release.
+
+#### ViewRep.UpdateUI
     - Will require a catch to check for changes prior to calling the updateText() method.
+        - At current, UpdateText() is called twice on every change.
+            - The way updating UITextField.text is designed, the value is formatted and assigned to the text field.
+
+    - A resolution to this would be: When the onChange delegate event is called:
+        - Update the text first with proper formatting, then assign the value.
+        - When the updateUIView method is called, check for changes in the value and text before calling the updateText() method.
+
+    - updateUIView is required to assign the initial text and update the text field when external changes in value occur.
+
 ```swift
     func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
         DispatchQueue.main.async {
@@ -138,23 +133,29 @@ The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`
 
 
 # Change Log
+## v0.1.4
+    - Resolved the issue with cursor not moving correctly within bounds when a whitespace is added via the `NumberFormatter`. The cursor will now only stay within the range of the first and last number character.
+    - All instances of the `NumberFormatter.Locale` should be supported.
+    - All fractional digit settings are supported.
+    - Currency values, and those with a `.minimumFractionDigits` greater than 0, will retain the correct formatting while the text field is not active. While active, the text field allows the end-user to freely stay within the `.maximumFractionDigits`.
+
 
 ## v0.1.3
     - Added percent format support.
-    
+
     - `NumberFormatter` now assigns the `value` and `text` properties.
     - Enhanced tracking of text field changes to refactor unnecessary code.
     - Extended moveCursorWithinBounds() to support percent numbers.
-    
+
     Found Bug:
     - Update text is being called on update of @State value due to the updateUI method of ViewRepresentable.
-        
-    
+
+
 ## v0.1.2
     - Added currency format support.
 
     - Fixed issue where input is not allowing trailing zeroes within fractional numbers.
-    
+
 
 ## v0.1.1
     - Added decimal format support.
