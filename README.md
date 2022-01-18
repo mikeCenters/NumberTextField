@@ -99,36 +99,37 @@ The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`
 *In no particular order*
 
 #### UI
-    - The keyboard is not changing to different types when assigned in SwiftUI.
+- The keyboard is not changing to different types when assigned in SwiftUI.
 
-    - View is rendered full screen.
-        - AutoLayoutConstraints?
+- View is rendered full screen.
+    - AutoLayoutConstraints?
 
-    - The text field always places the cursor towards the trailing end of the text field on changes.
-        - The cursor will remain in bounds.
-        - Inserting still works.
-        - This does not break the text field; however, the cursor retaining the position is necessary.
+- The text field always places the cursor towards the trailing end of the text field on changes.
+    - The cursor will remain in bounds.
+    - Inserting still works.
+    - This does not break the text field; however, the cursor retaining the position is necessary.
 
 #### Access Control
-    - The package needs to be scanned for access control of stuctures and classes prior to major release.
+- The package needs to be scanned for access control of stuctures and classes prior to major release.
 
 #### ViewRep.UpdateUI
-    - Will require a catch to check for changes prior to calling the updateText() method.
-        - At current, UpdateText() is called twice on every change.
-            - The way updating UITextField.text is designed, the value is formatted and assigned to the text field.
+- Will require a catch to check for changes prior to calling the updateText() method.
+    - At current, UpdateText() is called twice on every change.
+        - The way updating UITextField.text is designed, the value is formatted and assigned to the text field.
 
-    - A resolution to this would be: When the onChange delegate event is called:
-        - Update the text first with proper formatting, then assign the value.
-        - When the updateUIView method is called, check for changes in the value and text before calling the updateText() method.
+- A resolution to this would be: When the onChange delegate event is called:
+    - Update the text first with proper formatting, then assign the value.
+    - When the updateUIView method is called, check for changes in the value and text before calling the updateText() method.
 
-    - updateUIView is required to assign the initial text and update the text field when external changes in value occur.
+- updateUIView is required to assign the initial text and update the text field when external changes in value occur.
 
 ```swift
-    func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
-        DispatchQueue.main.async {
-            context.coordinator.updateText(uiView)
-        }
+func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
+    // Insert a check for change in uiView.text
+    DispatchQueue.main.async {
+        context.coordinator.updateText(uiView)
     }
+}
 ```
 
 
