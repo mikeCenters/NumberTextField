@@ -33,14 +33,14 @@ public struct NumberTextField: View {
 
 
 extension NumberTextField {
-    /// Initialize a `NumberTextField` with a `Decimal?` value.
+    /// Initialize a `NumberTextField` with a `Decimal?` binding.
     public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter) {
         self.placeholder = placeholder
         self._value = value
         self.formatter = formatter
     }
     
-    /// Initialize a `NumberTextField` with a `Decimal?` value.
+    /// Initialize a `NumberTextField` with a `Decimal?` binding.
     public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, onChange: @escaping (Decimal?) -> (), onCommit: @escaping (Decimal?) -> ()) {
         self.placeholder = placeholder
         self._value = value
@@ -54,21 +54,11 @@ extension NumberTextField {
 #if DEBUG
 // MARK: - Previews
 struct NumberTextField_Previews: PreviewProvider {
-    /// Not working properly.
-    static var formatterGerman: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.locale = .init(identifier: "de_DE")
-        return formatter
-    }
-    
-    /// Working.
-    static var formatterEnglish: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 2
-        formatter.locale = .init(identifier: "en_US")
-        return formatter
+    static var formatter: NumberFormatter {
+        let f = NumberFormatter()
+        f.numberStyle = .currency
+        f.maximumFractionDigits = 2
+        return f
     }
     @State static var value: Decimal? = 12345.678
     
@@ -76,7 +66,7 @@ struct NumberTextField_Previews: PreviewProvider {
         VStack {
             NumberTextField(placeholder: "Enter here...",
                             value: Self.$value,
-                            formatter: Self.formatterEnglish,
+                            formatter: Self.formatter,
                             onChange: { _ in },
                             onCommit: { _ in })
         }
