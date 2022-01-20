@@ -22,7 +22,7 @@ extension NumberTextFieldViewRep.Coordinator {
     internal func textField(isEditing: Bool) {
         let f = self.viewRep.formatter
         
-        self.isEditing = isEditing
+        self.viewRep.isActive = isEditing
         
         if !isEditing {
             f.minimumFractionDigits = self.definedMinimumFractionalDigits
