@@ -99,11 +99,6 @@ The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`
 *In no particular order*
 
 #### UI
-- The keyboard is not changing to different types when assigned in SwiftUI.
-
-- View is rendered full screen.
-    - AutoLayoutConstraints?
-
 - The text field always places the cursor towards the trailing end of the text field on changes.
     - The cursor will remain in bounds.
     - Inserting still works.
@@ -134,34 +129,47 @@ func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<Num
 
 
 # Change Log
+## v0.1.5
+- Added support for View modifiers:
+    - Multiline Text Alignment
+    - Font 
+        - Only system dynamic fonts(.title, .headline, .body, etc.) work at this time.
+        - To display a custom font, set the font within the ViewRepresentable.
+        
+- Resolved view sizing
+- Added the KeyboardType.decimalPad as the keyboard.
+- Added a binding to control the state of the text field.
+
+
 ## v0.1.4
-    - Resolved the issue with cursor not moving correctly within bounds when a whitespace is added via the `NumberFormatter`. The cursor will now only stay within the range of the first and last number character.
-    - All instances of the `NumberFormatter.Locale` should be supported.
-    - All fractional digit settings are supported.
-    - Currency values, and those with a `.minimumFractionDigits` greater than 0, will retain the correct formatting while the text field is not active. While active, the text field allows the end-user to freely stay within the `.maximumFractionDigits`.
+- Resolved the issue with cursor not moving correctly within bounds when a whitespace is added via the `NumberFormatter`. The cursor will now only stay within the range of the first and last number character.
+- All instances of the `NumberFormatter.Locale` should be supported.
+- All fractional digit settings are supported.
+- Currency values, and those with a `.minimumFractionDigits` greater than 0, will retain the correct formatting while the text field is not active. While active, the text field allows the end-user to freely stay within the `.maximumFractionDigits`.
 
 
 ## v0.1.3
-    - Added percent format support.
+- Added percent format support.
 
-    - `NumberFormatter` now assigns the `value` and `text` properties.
-    - Enhanced tracking of text field changes to refactor unnecessary code.
-    - Extended moveCursorWithinBounds() to support percent numbers.
+- `NumberFormatter` now assigns the `value` and `text` properties.
+- Enhanced tracking of text field changes to refactor unnecessary code.
+- Extended moveCursorWithinBounds() to support percent numbers.
 
-    Found Bug:
-    - Update text is being called on update of @State value due to the updateUI method of ViewRepresentable.
+#### Found Bug:
+- Update text is being called on update of @State value due to the updateUI method of ViewRepresentable.
+    - While this is supposed to happen, updateUI method should not update the text if the values are the same.
 
 
 ## v0.1.2
-    - Added currency format support.
+- Added currency format support.
 
-    - Fixed issue where input is not allowing trailing zeroes within fractional numbers.
+- Fixed issue where input is not allowing trailing zeroes within fractional numbers.
 
 
 ## v0.1.1
-    - Added decimal format support.
+- Added decimal format support.
 
 
 ## v0.1.0
-    - The initial release.
-    - Currently supports percent format for US or similar decimal formats.
+- The initial release.
+- Currently supports percent format for US or similar decimal formats.
