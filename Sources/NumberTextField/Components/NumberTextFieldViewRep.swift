@@ -18,6 +18,8 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
     var onChange: (Decimal?) -> ()
     var onCommit: (Decimal?) -> ()
     
+    @Binding var isActive: Bool
+    
     
     func makeUIView(context: UIViewRepresentableContext<NumberTextFieldViewRep>) -> UITextField {
         let textField = UIOpenTextField(frame: .zero)
@@ -33,10 +35,23 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
     }
     
     func updateUIView(_ textField: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
+        guard self.isActive
+        else {
+            DispatchQueue.main.async {
+                context.coordinator.updateText(textField)
+                textField.resignFirstResponder()
+            }
+            return
+        }
+        
         self.setModifiers(textField, environment: context.environment)
         
         DispatchQueue.main.async {
             context.coordinator.updateText(textField)
+            
+            if !textField.isFirstResponder {
+                textField.becomeFirstResponder()
+            }
         }
     }
     
