@@ -135,6 +135,9 @@ func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<Num
 
 
 # Change Log
+## v0.1.5.1
+- Fixed bug found with cursor placement.
+
 ## v0.1.5
 - Added support for View modifiers:
     - Multiline Text Alignment

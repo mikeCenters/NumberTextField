@@ -172,7 +172,7 @@ extension NumberTextFieldViewRep.Coordinator {
                     
                 } else {
                     range[0] = index
-                    range[1] = index
+                    range[1] = index + 1
                     startIsFound = true
                 }
             }
@@ -183,11 +183,13 @@ extension NumberTextFieldViewRep.Coordinator {
         else {
             return
         }
-        
+        // $12.34
+        // lead = 1 trail = 5
+        //
         if cursorPosition < range[0] {
             textField.selectedTextRange = textField.textRange(from: leadingOffset, to: leadingOffset)
         
-        } else if cursorPosition > range[1] + 1 {
+        } else if cursorPosition > range[1] {
             textField.selectedTextRange = textField.textRange(from: trailingOffset, to: trailingOffset)
         }
     }
