@@ -20,63 +20,36 @@ public struct NumberTextField: View {
     var onChange: (Decimal?) -> () = { _ in }
     /// The callback function for when the user commits to their input.
     var onCommit: (Decimal?) -> () = { _ in }
-    
+    /// The state of the text field.
+    @Binding var isActive: Bool
     
     public var body: some View {
         NumberTextFieldViewRep(placeholder: self.placeholder,
                                value: self.$value,
                                formatter: self.formatter,
                                onChange: self.onChange,
-                               onCommit: self.onCommit)
+                               onCommit: self.onCommit,
+                               isActive: self.$isActive)
     }
 }
 
 
 extension NumberTextField {
     /// Initialize a `NumberTextField` with a `Decimal?` binding.
-    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter) {
+    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, isActive: Binding<Bool>) {
         self.placeholder = placeholder
         self._value = value
         self.formatter = formatter
+        self._isActive = isActive
     }
     
     /// Initialize a `NumberTextField` with a `Decimal?` binding.
-    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, onChange: @escaping (Decimal?) -> (), onCommit: @escaping (Decimal?) -> ()) {
+    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, isActive: Binding<Bool>, onChange: @escaping (Decimal?) -> (), onCommit: @escaping (Decimal?) -> ()) {
         self.placeholder = placeholder
         self._value = value
         self.formatter = formatter
+        self._isActive = isActive
         self.onChange = onChange
         self.onCommit = onCommit
     }
 }
-
-
-#if DEBUG
-// MARK: - Previews
-struct NumberTextField_Previews: PreviewProvider {
-    static var formatter: NumberFormatter {
-        let f = NumberFormatter()
-        f.numberStyle = .currency
-        f.maximumFractionDigits = 2
-        return f
-    }
-    @State static var value: Decimal? = 12345.678
-    
-    static var previews: some View {
-        VStack {
-            NumberTextField(placeholder: "Enter here...",
-                            value: Self.$value,
-                            formatter: Self.formatter,
-                            onChange: { _ in },
-                            onCommit: { _ in })
-        }
-        .padding()
-#if os(iOS)
-        .background(Color(.secondarySystemBackground))
-#elseif os(macOS)
-        .background(Color(.black))
-#endif
-        .previewLayout(.sizeThatFits)
-    }
-}
-#endif
