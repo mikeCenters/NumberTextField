@@ -37,13 +37,13 @@ extension NumberTextFieldViewRep {
         /// The minimum fractional digits initially set via the provided `NumberFormatter`.
         internal var definedMinimumFractionalDigits: Int
         /// The state of text field editing.
-        internal var isEditing: Bool
+        internal var isEditing: Bool {
+            return self.viewRep.isActive
+        }
         
         
         init(_ viewRep: NumberTextFieldViewRep) {
             self.viewRep = viewRep
-            
-            self.isEditing = false
             self.definedMinimumFractionalDigits = viewRep.formatter.minimumFractionDigits
         }
         
