@@ -135,7 +135,7 @@ func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<Num
 
 
 # Change Log
-## v0.1.5.1
+## v0.2.0
 - Fixed bug found with cursor placement.
 
 ## v0.1.5
