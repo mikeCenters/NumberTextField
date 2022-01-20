@@ -94,6 +94,12 @@ These attributes have a default value unique to the `NumberFormatter.numberStyle
 The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`. If the developer chooses to not allow fractional input, set the `.maximumFractionalDigits` attribute to zero. This will also filter the decimal separator from user input.
 
 
+# Keyboard
+
+When using the `.keyboardType` modifier of a `View`, the UIKit text field will not receive the modification. The `KeyboardType` assigned to the text field is the `.decimalPad`. There will be no button to call the resignFirstResponder() method. To resolve this, a keyboard accessory must be made within SwiftUI to toggle the state of the text field. 
+
+
+
 # Current Issues / Objectives
 
 *In no particular order*
