@@ -112,7 +112,7 @@ struct ContentView: View {
                         isActive: self.$textFieldIsActive,
                         onChange: { _ in },
                         onCommit: { _ in })
-                    .uiFont(.body, weight: .semibold)
+                    .uiFont(.body, weight: .semibold, style: .rounded)
                     .textColor(self.textFieldIsActive ? .primary : .white)
                     .textAlignment(.center)
     }
@@ -121,7 +121,9 @@ struct ContentView: View {
 ```
 
 ### .uiFont
-Set the font to be displayed.
+Set the font to be displayed within the text field.
+
+The modifier will accept a `UIFont` for complete control of the font. It will also accept dynamic text types, including weight and style modification.
 
 ### .textColor
 Set the text foreground color.
