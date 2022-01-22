@@ -32,6 +32,8 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
     }
     
     func updateUIView(_ textField: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
+        self.setModifiers(textField, environment: context.environment)
+        
         guard self.isActive
         else {
             DispatchQueue.main.async {
@@ -40,8 +42,6 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
             }
             return
         }
-        
-        self.setModifiers(textField, environment: context.environment)
         
         DispatchQueue.main.async {
             context.coordinator.updateText(textField)
