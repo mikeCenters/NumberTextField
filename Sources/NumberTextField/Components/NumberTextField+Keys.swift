@@ -20,8 +20,8 @@ extension View {
     }
     
     /// Sets the environment value of `NumberTextField_Font`.
-    @inlinable public func uiFont(_ font: Font, weight: UIFont.Weight = .regular, design: UIFontDescriptor.SystemDesign = .default) -> some View {
-        environment(\.numberTextField_Font, UIFont.preferredFont(from: font).withWeight(weight).withDesign(design))
+    @inlinable public func uiFont(_ style: UIFont.TextStyle, weight: UIFont.Weight = .regular, design: UIFontDescriptor.SystemDesign = .default) -> some View {
+        environment(\.numberTextField_Font, UIFont.preferredFont(style, weight: weight).with(design: design))
     }
 }
 
@@ -68,56 +68,21 @@ private struct NumberTextField_Font: EnvironmentKey {
 }
 
 extension UIFont {
-    public func withDesign(_ design: UIFontDescriptor.SystemDesign) -> UIFont {
-        guard let descriptor = fontDescriptor.withDesign(design) else {
+    /// Set the design of the `UIFont`.
+    public func with(design: UIFontDescriptor.SystemDesign) -> UIFont {
+        guard let descriptor = self.fontDescriptor.withDesign(design) else {
             return self
         }
         
         return UIFont(descriptor: descriptor, size: self.pointSize)
     }
     
-    
-    public func withWeight(_ weight: UIFont.Weight) -> UIFont {
-        var attributes = self.fontDescriptor.fontAttributes
-        var traits = (attributes[.traits] as? [UIFontDescriptor.TraitKey: Any]) ?? [:]
-
-        traits[.weight] = weight
-
-        attributes[.name] = nil
-        attributes[.traits] = traits
-        attributes[.family] = familyName
-        
-        let descriptor = UIFontDescriptor(fontAttributes: attributes)
-
-        return UIFont(descriptor: descriptor, size: pointSize)
+    /// Create a system `UIFont` with the provided text style. The weight defaults to `.regular`.
+    public class func preferredFont(_ style: UIFont.TextStyle, weight: UIFont.Weight = .regular) -> UIFont {
+        let metrics = UIFontMetrics(forTextStyle: style)
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+        let font = UIFont.systemFont(ofSize: descriptor.pointSize, weight: weight)
+        return metrics.scaledFont(for: font)
     }
     
-    public class func preferredFont(from font: Font) -> UIFont {
-        switch font {
-        case .largeTitle:
-            return UIFont.preferredFont(forTextStyle: .largeTitle)
-        case .title:
-            return UIFont.preferredFont(forTextStyle: .title1)
-        case .title2:
-            return UIFont.preferredFont(forTextStyle: .title2)
-        case .title3:
-            return UIFont.preferredFont(forTextStyle: .title3)
-        case .headline:
-            return UIFont.preferredFont(forTextStyle: .headline)
-        case .subheadline:
-            return UIFont.preferredFont(forTextStyle: .subheadline)
-        case .callout:
-            return UIFont.preferredFont(forTextStyle: .callout)
-        case .caption:
-            return UIFont.preferredFont(forTextStyle: .caption1)
-        case .caption2:
-            return UIFont.preferredFont(forTextStyle: .caption2)
-        case .footnote:
-            return UIFont.preferredFont(forTextStyle: .footnote)
-        case .body:
-            return UIFont.preferredFont(forTextStyle: .body)
-        default:
-            return UIFont.preferredFont(forTextStyle: .body)
-        }
-    }
 }
