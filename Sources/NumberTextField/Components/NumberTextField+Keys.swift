@@ -20,8 +20,8 @@ extension View {
     }
     
     /// Sets the environment value of `NumberTextField_Font`.
-    @inlinable public func uiFont(_ font: Font, weight: UIFont.Weight = .regular) -> some View {
-        environment(\.numberTextField_Font, UIFont.preferredFont(from: font).withWeight(weight))
+    @inlinable public func uiFont(_ font: Font, weight: UIFont.Weight = .regular, design: UIFontDescriptor.SystemDesign = .default) -> some View {
+        environment(\.numberTextField_Font, UIFont.preferredFont(from: font).withWeight(weight).withDesign(design))
     }
 }
 
@@ -68,8 +68,17 @@ private struct NumberTextField_Font: EnvironmentKey {
 }
 
 extension UIFont {
+    public func withDesign(_ design: UIFontDescriptor.SystemDesign) -> UIFont {
+        guard let descriptor = fontDescriptor.withDesign(design) else {
+            return self
+        }
+        
+        return UIFont(descriptor: descriptor, size: self.pointSize)
+    }
+    
+    
     public func withWeight(_ weight: UIFont.Weight) -> UIFont {
-        var attributes = fontDescriptor.fontAttributes
+        var attributes = self.fontDescriptor.fontAttributes
         var traits = (attributes[.traits] as? [UIFontDescriptor.TraitKey: Any]) ?? [:]
 
         traits[.weight] = weight
