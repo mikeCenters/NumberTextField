@@ -23,6 +23,11 @@ extension View {
     @inlinable public func uiFont(_ style: UIFont.TextStyle, weight: UIFont.Weight = .regular, design: UIFontDescriptor.SystemDesign = .default) -> some View {
         environment(\.numberTextField_Font, UIFont.preferredFont(style, weight: weight).with(design: design))
     }
+    
+    /// Sets the environment value of `NumberTextField_Font`.
+    @inlinable public func uiFont(_ font: UIFont) -> some View {
+        environment(\.numberTextField_Font, font)
+    }
 }
 
 
