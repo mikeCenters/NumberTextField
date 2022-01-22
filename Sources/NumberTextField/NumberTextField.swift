@@ -23,13 +23,21 @@ public struct NumberTextField: View {
     /// The state of the text field.
     @Binding var isActive: Bool
     
+    
     public var body: some View {
-        NumberTextFieldViewRep(placeholder: self.placeholder,
-                               value: self.$value,
-                               formatter: self.formatter,
-                               onChange: self.onChange,
-                               onCommit: self.onCommit,
-                               isActive: self.$isActive)
+        HStack {
+            Spacer()
+            NumberTextFieldViewRep(placeholder: self.placeholder,
+                                   value: self.$value,
+                                   formatter: self.formatter,
+                                   onChange: self.onChange,
+                                   onCommit: self.onCommit,
+                                   isActive: self.$isActive)
+            Spacer()
+        }
+        .onTapGesture {
+            self.isActive = true
+        }
     }
 }
 
