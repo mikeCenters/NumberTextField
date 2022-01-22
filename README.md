@@ -35,9 +35,9 @@ struct ContentView: View {
 
 
     var body: some View {
-        NumberTextField("Enter here...",
-                        value: self.$value,
-                        formatter: self.numberFormatter,
+        NumberTextField("Enter here...", value: self.$value,
+                        formatter: self.numberFormatter,     
+                        isActive: self.$textFieldIsActive,
                         onChange: { num in
                             // num is a Decimal? type
                         },
@@ -99,6 +99,36 @@ The `.alwaysShowDecimalSeparator` attribute is manipulated via the `Coordinator`
 When using the `.keyboardType` modifier of a `View`, the UIKit text field will not receive the modification. The `KeyboardType` assigned to the text field is the `.decimalPad`. There will be no button to call the resignFirstResponder() method. To resolve this, a keyboard accessory must be made within SwiftUI to toggle the state of the text field. 
 
 
+# View Modifiers
+```swift
+struct ContentView: View {
+    var numberFormatter: NumberFormatter { ... }
+    @State var value: Decimal? =  1.5
+    
+    
+    var body: some View {
+        NumberTextField("Enter here...", value: self.$value,
+                        formatter: self.numberFormatter,
+                        isActive: self.$textFieldIsActive,
+                        onChange: { _ in },
+                        onCommit: { _ in })
+                    .uiFont(.body, weight: .semibold)
+                    .textColor(self.textFieldIsActive ? .primary : .white)
+                    .textAlignment(.center)
+    }
+}
+
+```
+
+### .uiFont
+Set the font to be displayed.
+
+### .textColor
+Set the text foreground color.
+
+### .textAlignment
+Set the text alignment.
+
 
 # Current Issues / Objectives
 
@@ -137,6 +167,13 @@ func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<Num
 # Change Log
 ## v0.2.0
 - Fixed bug found with cursor placement.
+
+(Current Build: Will Update tag to reflect the upcoming changes.)
+- Moved View modifiers to the environment.
+    - NumberTextField_TextAlignment
+    - NumberTextField_TextColor
+    - NumberTextField_Font
+    
 
 ## v0.1.5
 - Added support for View modifiers:
