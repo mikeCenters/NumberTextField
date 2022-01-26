@@ -28,6 +28,11 @@ extension View {
     @inlinable public func uiFont(_ font: UIFont) -> some View {
         environment(\.numberTextField_Font, font)
     }
+    
+    /// Set the environment value of `NumberTextField_InputAccessory`.
+    @inlinable public func inputAccessory<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        environment(\.numberTextField_InputAccessory, UIHostingController(rootView: content()).view)
+    }
 }
 
 
@@ -90,4 +95,18 @@ extension UIFont {
         return metrics.scaledFont(for: font)
     }
     
+}
+
+
+// MARK: - Input Accessory
+extension EnvironmentValues {
+    ///. The input accessory view for a `NumberTextField`.
+    public var numberTextField_InputAccessory: UIView? {
+        get { self[NumberTextField_InputAccessory.self] }
+        set { self[NumberTextField_InputAccessory.self] = newValue }
+    }
+}
+
+private struct NumberTextField_InputAccessory: EnvironmentKey {
+    static let defaultValue: UIView? = nil
 }

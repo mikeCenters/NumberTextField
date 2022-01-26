@@ -73,5 +73,10 @@ extension NumberTextFieldViewRep {
         textField.textAlignment = environment.numberTextField_TextAlignment
         textField.font = environment.numberTextField_Font
         textField.textColor = UIColor(environment.numberTextField_TextColor)
+        
+        let accessory = environment.numberTextField_InputAccessory
+        accessory?.translatesAutoresizingMaskIntoConstraints = false
+        accessory?.frame = textField.bounds
+        textField.inputAccessoryView = environment.numberTextField_InputAccessory
     }
 }
