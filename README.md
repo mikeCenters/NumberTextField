@@ -44,6 +44,16 @@ struct ContentView: View {
                         onCommit: { num in
                             // num is a Decimal? type
                         })
+            .inputAccessory {
+                HStack {
+                    Spacer()
+                    Button(action: { submit() }) {
+                        Text("Submit")
+                    }
+                }
+                .padding()
+                .background(Color(.secondarySystemBackground))
+            }
     }
 }
 ```
@@ -131,6 +141,9 @@ Set the text foreground color.
 ### .textAlignment
 Set the text alignment.
 
+### .inputAccessory
+Create an input accessory view that is bound to the keyboard.
+
 
 # Current Issues / Objectives
 
@@ -167,6 +180,11 @@ func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<Num
 
 
 # Change Log
+## v0.2.1
+- Added support for the creation of an input accessory view within SwiftUI.
+    - Call .inputAccessory and build the view.
+
+
 ## v0.2.0
 - Fixed bug found with cursor placement.
 
