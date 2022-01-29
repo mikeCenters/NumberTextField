@@ -37,14 +37,14 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
         guard self.isActive
         else {
             DispatchQueue.main.async {
-                context.coordinator.updateText(textField)
+                context.coordinator.updateText(textField, decimal: self.value)
                 textField.resignFirstResponder()
             }
             return
         }
         
         DispatchQueue.main.async {
-            context.coordinator.updateText(textField)
+            context.coordinator.updateText(textField, decimal: self.value)
             
             if !textField.isFirstResponder {
                 textField.becomeFirstResponder()

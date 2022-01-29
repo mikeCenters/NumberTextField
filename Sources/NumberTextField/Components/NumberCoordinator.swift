@@ -75,7 +75,7 @@ extension NumberTextFieldViewRep.Coordinator {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
             self.textField(isEditing: true)
-            self.updateText(textField)
+            self.updateText(textField, decimal: self.viewRep.value)
             
             if let text = textField.text {
                 self.moveCursorWithinBounds(textField, cursorPosition: text.count)
@@ -90,7 +90,7 @@ extension NumberTextFieldViewRep.Coordinator {
             self._setMinimumFractionalDigits(textField)
             
             self.updateValue(textField)
-            self.updateText(textField)
+            self.updateText(textField, decimal: self.viewRep.value)
             
             /// Check if cursor is within bounds.
             if let range = textField.selectedTextRange?.start {
@@ -106,7 +106,7 @@ extension NumberTextFieldViewRep.Coordinator {
     func textFieldDidEndEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
             self.textField(isEditing: false)
-            self.updateText(textField)
+            self.updateText(textField, decimal: self.viewRep.value)
             self.viewRep.onCommit(self.viewRep.value)
         }
     }

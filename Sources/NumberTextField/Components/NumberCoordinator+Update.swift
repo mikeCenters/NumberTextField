@@ -21,10 +21,11 @@ extension NumberTextFieldViewRep.Coordinator {
      will use the current `ViewRepresentable.value` to update the `textField.text`.
      
      - parameter textField: The `UITextField` that will be used for `.text` updating.
+     - parameter decimal: The `decimal` value to be used for updating the text field.
      - warning: This method updates the UI and should be called on the main thread.
      */
-    internal func updateText(_ textField: UITextField) {
-        guard let value = self.viewRep.value,
+    internal func updateText(_ textField: UITextField, decimal: Decimal?) {
+        guard let value = decimal,
               let formattedString = self.viewRep.formatter.string(from: value as NSDecimalNumber)
         else {
             textField.text = ""
