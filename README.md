@@ -180,6 +180,10 @@ func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<Num
 
 
 # Change Log
+## v0.2.2
+- Resolved error with the NumberTextField not updating on certain model changes.
+
+
 ## v0.2.1
 - Added support for the creation of an input accessory view within SwiftUI.
     - Call .inputAccessory and build the view.
