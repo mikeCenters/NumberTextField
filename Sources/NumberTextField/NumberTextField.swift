@@ -61,3 +61,50 @@ extension NumberTextField {
         self.onCommit = onCommit
     }
 }
+
+
+class SomeObject: ObservableObject {
+    @Published var value: Decimal?
+}
+
+
+struct NumberTextField_Previews: PreviewProvider {
+    @StateObject static var vm = SomeObject()
+    
+    static var formatter: NumberFormatter {
+        let f = NumberFormatter()
+        f.numberStyle = .currency
+        return f
+    }
+    
+    @State static var isActive: Bool = false
+    
+    static var previews: some View {
+        VStack {
+            NumberTextFieldViewRep(placeholder: "Enter..",
+                                   value: $vm.value,
+                                   formatter: formatter,
+                                   onChange: { num in
+                
+            },
+                                   onCommit: { num in
+                
+            },
+                                   isActive: $isActive)
+            
+            Button {
+                DispatchQueue.main.async {
+                    vm.value = 5555555
+                    isActive = true
+                    
+                }
+                
+                
+            } label: {
+                Text("Change")
+            }
+
+            
+        }
+    }
+}

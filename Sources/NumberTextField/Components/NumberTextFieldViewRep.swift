@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-struct NumberTextFieldViewRep: UIViewRepresentable {
+public struct NumberTextFieldViewRep: UIViewRepresentable {
     var placeholder: String
     @Binding var value: Decimal?
     var formatter: NumberFormatter
@@ -18,7 +18,7 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
     @Binding var isActive: Bool
     
     
-    func makeUIView(context: UIViewRepresentableContext<NumberTextFieldViewRep>) -> UITextField {
+    public func makeUIView(context: UIViewRepresentableContext<NumberTextFieldViewRep>) -> UITextField {
         let textField = UIOpenTextField(frame: .zero)
         textField.delegate = context.coordinator
         textField.placeholder = self.placeholder
@@ -31,7 +31,8 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
         return textField
     }
     
-    func updateUIView(_ textField: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
+    
+    public func updateUIView(_ textField: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
         self.setModifiers(textField, environment: context.environment)
         
         guard self.isActive
@@ -52,14 +53,15 @@ struct NumberTextFieldViewRep: UIViewRepresentable {
         }
     }
     
-    func makeCoordinator() -> NumberTextFieldViewRep.Coordinator {
+    
+    public func makeCoordinator() -> NumberTextFieldViewRep.Coordinator {
         Coordinator(self)
     }
 }
 
 
 // MARK: - Modifiers
-extension NumberTextFieldViewRep {
+private extension NumberTextFieldViewRep {
     /**
      Set the view modifiers for the `UITextField`
      

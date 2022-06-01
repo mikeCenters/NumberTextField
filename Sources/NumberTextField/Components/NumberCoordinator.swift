@@ -7,9 +7,9 @@
 
 import UIKit
 
-
 // MARK: - Coordinator
-extension NumberTextFieldViewRep {
+
+public extension NumberTextFieldViewRep {
     class Coordinator: NSObject, UITextFieldDelegate {
         var viewRep: NumberTextFieldViewRep
         
@@ -70,7 +70,7 @@ extension NumberTextFieldViewRep {
 
 
 // MARK: - Delegate Methods
-extension NumberTextFieldViewRep.Coordinator {
+public extension NumberTextFieldViewRep.Coordinator {
     @objc
     func textFieldDidBeginEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
