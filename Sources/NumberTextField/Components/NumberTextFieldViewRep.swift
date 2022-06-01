@@ -19,13 +19,14 @@ public struct NumberTextFieldViewRep: UIViewRepresentable {
     
     
     public func makeUIView(context: UIViewRepresentableContext<NumberTextFieldViewRep>) -> UITextField {
-        let textField = UIOpenTextField(frame: .zero)
-        textField.delegate = context.coordinator
-        textField.placeholder = self.placeholder
-        context.coordinator.setup(textField)
-        
-        textField.setContentHuggingPriority(.required, for: .horizontal)
+        /// Frame is set to `.infinite` to fill all available space.
+        let textField = UIOpenTextField(frame: .infinite)
+        /// Set the vertical height to fit the the content of the view.
+        /// Resulting in a horizontal fill, and vertical fit to content.
         textField.setContentHuggingPriority(.required, for: .vertical)
+        
+        textField.delegate = context.coordinator
+        context.coordinator.setup(textField)
         
         self.setModifiers(textField, environment: context.environment)
         return textField
@@ -59,6 +60,26 @@ public struct NumberTextFieldViewRep: UIViewRepresentable {
     }
 }
 
+// MARK: - Init
+
+///// Initialize a `NumberTextField` with a `Decimal?` binding.
+//public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, isActive: Binding<Bool>) {
+//    self.placeholder = placeholder
+//    self._value = value
+//    self.formatter = formatter
+//    self._isActive = isActive
+//}
+//
+///// Initialize a `NumberTextField` with a `Decimal?` binding.
+//public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, isActive: Binding<Bool>, onChange: @escaping (Decimal?) -> (), onCommit: @escaping (Decimal?) -> ()) {
+//    self.placeholder = placeholder
+//    self._value = value
+//    self.formatter = formatter
+//    self._isActive = isActive
+//    self.onChange = onChange
+//    self.onCommit = onCommit
+//}
+
 
 // MARK: - Modifiers
 private extension NumberTextFieldViewRep {
@@ -71,6 +92,7 @@ private extension NumberTextFieldViewRep {
      - parameter environment: The `EnvironmentValues` set for the `View` hierarchy.
      */
     private func setModifiers(_ textField: UITextField, environment: EnvironmentValues) {
+        textField.placeholder = placeholder
         textField.keyboardType = .decimalPad
         textField.textAlignment = environment.numberTextField_TextAlignment
         textField.font = environment.numberTextField_Font
