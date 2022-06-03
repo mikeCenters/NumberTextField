@@ -6,105 +6,168 @@
 //
 
 import SwiftUI
-import Combine
+import UIKit
 
+// MARK: - Number Text Field
 
-public struct NumberTextField: View {
-    /// The placeholder string for an empty textfield.
-    var placeholder: String
-    /// The binding value for the text field to render.
-    @Binding var value: Decimal?
-    /// The `NumberFormatter` that will be used for formatting the user input.
-    var formatter: NumberFormatter
-    /// The callback function that is called when the user inputs any change.
-    var onChange: (Decimal?) -> () = { _ in }
-    /// The callback function for when the user commits to their input.
-    var onCommit: (Decimal?) -> () = { _ in }
-    /// The state of the text field.
-    @Binding var isActive: Bool
+public struct NumberTextField: UIViewRepresentable {
+    
+    /// The number formatter used for formatting the text field and value.
+    internal var formatter: NumberFormatter
+    
+    /// The placeholder text that appears when the text field is empty.
+    internal var placeholder: String
+    
+    /// The underlying value of the text field.
+    @Binding public var value: Decimal?
+    
+    /// Boolean representing if the text field is first responder.
+    @Binding public var isActive: Bool
+    
+    /// A method called when the number text field has commited its input.
+    public var onCommit: (Decimal?) -> ()
     
     
-    public var body: some View {
-        HStack {
-            Spacer()
-            NumberTextFieldViewRep(placeholder: self.placeholder,
-                                   value: self.$value,
-                                   formatter: self.formatter,
-                                   onChange: self.onChange,
-                                   onCommit: self.onCommit,
-                                   isActive: self.$isActive)
-            Spacer()
-        }
-        .onTapGesture {
-            self.isActive = true
-        }
-    }
-}
-
-
-extension NumberTextField {
-    /// Initialize a `NumberTextField` with a `Decimal?` binding.
-    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, isActive: Binding<Bool>) {
+    // MARK: - Init
+    
+    public init(placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, isActive: Binding<Bool>, onCommit: @escaping (Decimal?) -> ()) {
         self.placeholder = placeholder
         self._value = value
         self.formatter = formatter
         self._isActive = isActive
-    }
-    
-    /// Initialize a `NumberTextField` with a `Decimal?` binding.
-    public init(_ placeholder: String, value: Binding<Decimal?>, formatter: NumberFormatter, isActive: Binding<Bool>, onChange: @escaping (Decimal?) -> (), onCommit: @escaping (Decimal?) -> ()) {
-        self.placeholder = placeholder
-        self._value = value
-        self.formatter = formatter
-        self._isActive = isActive
-        self.onChange = onChange
         self.onCommit = onCommit
     }
-}
-
-
-class SomeObject: ObservableObject {
-    @Published var value: Decimal?
-}
-
-
-struct NumberTextField_Previews: PreviewProvider {
-    @StateObject static var vm = SomeObject()
     
-    static var formatter: NumberFormatter {
+    
+    // MARK: - Make
+    
+    public func makeCoordinator() -> NumberTextField.Coordinator {
+        return Coordinator(self)
+    }
+    
+    
+    public func makeUIView(context: UIViewRepresentableContext<NumberTextField>) -> UIOpenTextField {
+        /// Frame is set to `.infinite` to fill all available space.
+        let textField = UIOpenTextField(frame: .infinite)
+        /// Set the vertical height to fit the the content of the view.
+        /// Resulting in a horizontal fill, and vertical fit to content.
+        textField.setContentHuggingPriority(.required, for: .vertical)
+        
+        textField.delegate = context.coordinator
+        context.coordinator.setup(textField)
+        
+        self.setModifiers(textField, environment: context.environment)
+        return textField
+    }
+    
+    
+    public func updateUIView(_ textField: UIOpenTextField, context: UIViewRepresentableContext<NumberTextField>) {
+        self.setModifiers(textField, environment: context.environment)
+        
+        /// Update the text field's text property.
+        context.coordinator.updateText(textField, decimal: value)
+        
+        /// Set first responder
+        if isActive {
+            textField.becomeFirstResponder()
+            
+        } else {
+            textField.resignFirstResponder()
+        }
+    }
+}
+
+
+// MARK: - Modifiers
+
+extension NumberTextField {
+    /**
+     Set the view modifiers for the `UITextField`
+     
+     This method applies the modifiers from the environment to the text field.
+     
+     - parameter textField: The `UITextField` that will be modified.
+     - parameter environment: The `EnvironmentValues` set for the `View` hierarchy.
+     */
+    private func setModifiers(_ textField: UITextField, environment: EnvironmentValues) {
+        textField.placeholder = placeholder
+        textField.keyboardType = .decimalPad
+        textField.textAlignment = environment.numberTextField_TextAlignment
+        textField.font = environment.numberTextField_Font
+        textField.textColor = UIColor(environment.numberTextField_TextColor)
+        
+        
+        let accessory = environment.numberTextField_InputAccessory
+        accessory?.translatesAutoresizingMaskIntoConstraints = false
+        accessory?.frame = textField.bounds
+        textField.inputAccessoryView = environment.numberTextField_InputAccessory
+    }
+}
+
+
+#if DEBUG
+
+// MARK: - Previews
+
+/// Use of container to see @State changes in Previews.
+struct SomeContainer: View {
+    private var formatter: NumberFormatter {
         let f = NumberFormatter()
         f.numberStyle = .currency
         return f
     }
     
-    @State static var isActive: Bool = false
+    @State private var value: Decimal?
+    @State private var isActive: Bool = false
     
-    static var previews: some View {
-        VStack {
-            NumberTextFieldViewRep(placeholder: "Enter..",
-                                   value: $vm.value,
-                                   formatter: formatter,
-                                   onChange: { num in
-                
-            },
-                                   onCommit: { num in
-                
-            },
-                                   isActive: $isActive)
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Raw value: \(value?.description ?? "nil")")
             
-            Button {
-                DispatchQueue.main.async {
-                    vm.value = 5555555
-                    isActive = true
+            NumberTextField(
+                placeholder: "Enter...",
+                value: $value,
+                formatter: formatter,
+                isActive: $isActive) { num in
                     
                 }
-                
-                
-            } label: {
-                Text("Change")
-            }
-
+                .background(Color(.secondarySystemBackground))
             
+            
+            VStack {
+                Text("Change value to 123456.789")
+                
+                Text("Should result in $123,456.79.")
+                .font(.caption)
+                
+                Button {
+                    value = 123456.789
+                } label: {
+                    Text("Change value")
+                }
+            }
+            
+            
+            VStack {
+                Text("Change value to nil")
+                
+                Text("Should result in an empty field.")
+                .font(.caption)
+                
+                Button {
+                    value = nil
+                } label: {
+                    Text("Change value")
+                }
+            }
         }
     }
 }
+
+struct NumberTextField_Previews: PreviewProvider {
+    static var previews: some View {
+        SomeContainer()
+    }
+}
+#endif
