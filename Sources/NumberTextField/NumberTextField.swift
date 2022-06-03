@@ -123,6 +123,14 @@ struct SomeContainer: View {
     
     var body: some View {
         VStack(spacing: 16) {
+            
+            VStack {
+                Button {
+                    isActive.toggle()
+                } label: {
+                    Text("Toggle First Responder")
+                }
+            }
             Text("Raw value: \(value?.description ?? "nil")")
             
             NumberTextField(
