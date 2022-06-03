@@ -7,9 +7,9 @@
 
 import UIKit
 
-
 // MARK: - Update Text
-extension NumberTextFieldViewRep.Coordinator {
+
+public extension NumberTextField.Coordinator {
     /**
      Update the text parameter within the text field.
      
@@ -26,7 +26,7 @@ extension NumberTextFieldViewRep.Coordinator {
      */
     internal func updateText(_ textField: UITextField, decimal: Decimal?) {
         guard let value = decimal,
-              let formattedString = self.viewRep.formatter.string(from: value as NSDecimalNumber)
+              let formattedString = parent.formatter.string(from: value as NSDecimalNumber)
         else {
             textField.text = ""
             return
@@ -38,7 +38,8 @@ extension NumberTextFieldViewRep.Coordinator {
 
 
 // MARK: - Update Value
-extension NumberTextFieldViewRep.Coordinator {
+
+extension NumberTextField.Coordinator {
     /**
      Update the value of the text field.
      
@@ -53,21 +54,21 @@ extension NumberTextFieldViewRep.Coordinator {
     internal func updateValue(_ textField: UITextField) {
         guard let text = textField.text
         else {
-            self.viewRep.value = nil
+            parent.value = nil
             return
         }
         
-        let numString = self.filter(text)
+        let numString = filter(text)
         
-        switch self.viewRep.formatter.numberStyle {
+        switch parent.formatter.numberStyle {
         case .percent:
-            self._assignPercent(numString)
+            _assignPercent(numString)
             
         case .decimal, .currency:
-            self._assignDecimal(numString)
+            _assignDecimal(numString)
             
         default:
-            self._assignDecimal(numString)
+            _assignDecimal(numString)
         }
     }
     
@@ -82,9 +83,9 @@ extension NumberTextFieldViewRep.Coordinator {
      */
     private func _assignPercent(_ s: NumberString) {
         guard !s.isEmpty,
-              let percent = Decimal(string: s, locale: self.locale)
+              let percent = Decimal(string: s, locale: locale)
         else {
-            self.viewRep.value = nil
+            parent.value = nil
             return
         }
         /*
@@ -92,14 +93,14 @@ extension NumberTextFieldViewRep.Coordinator {
          self.viewRep.value = self.viewRep.formatter.number(from: "\(percent / 100)")?.decimalValue
          The formatter does not respect to the .maximumFractionDigits property when making a number.
          */
-        guard let str = self.viewRep.formatter.string(from: (percent / 100) as NSDecimalNumber),
-              let num = self.viewRep.formatter.number(from: str)
+        guard let str = parent.formatter.string(from: (percent / 100) as NSDecimalNumber),
+              let num = parent.formatter.number(from: str)
         else {
-            self.viewRep.value = nil
+            parent.value = nil
             return
         }
         
-        self.viewRep.value = num.decimalValue
+        parent.value = num.decimalValue
     }
     
     /**
@@ -111,24 +112,25 @@ extension NumberTextFieldViewRep.Coordinator {
      */
     private func _assignDecimal(_ s: NumberString) {
         guard !s.isEmpty,
-              let decimal = Decimal(string: s, locale: self.locale)
+              let decimal = Decimal(string: s, locale: locale)
         else {
-            self.viewRep.value = nil
+            parent.value = nil
             return
         }
         
-        /*
+        /**
          This will not work:
          self.viewRep.value = self.viewRep.formatter.number(from: "\(decimal)")?.decimalValue
+         
          The formatter does not respect to the .maximumFractionDigits property when making a number.
          */
-        guard let str = self.viewRep.formatter.string(from: decimal as NSDecimalNumber),
-              let num = self.viewRep.formatter.number(from: str)
+        guard let str = parent.formatter.string(from: decimal as NSDecimalNumber),
+              let num = parent.formatter.number(from: str)
         else {
-            self.viewRep.value = nil
+            parent.value = nil
             return
         }
         
-        self.viewRep.value = num.decimalValue
+        parent.value = num.decimalValue
     }
 }
