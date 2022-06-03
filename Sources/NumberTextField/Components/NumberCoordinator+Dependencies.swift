@@ -8,27 +8,9 @@
 
 import UIKit
 
-
 // MARK: - State Management
-extension NumberTextFieldViewRep.Coordinator {
-    /**
-     Set the state of text field editing
-     
-     This method will also assign the defined parameters of the `NumberFormatter` that may have
-     been altered via the `Coordinator`.
-     
-     - parameter isEditing: The `Bool` value of the text field edit state.
-     */
-    internal func textField(isEditing: Bool) {
-        let f = self.viewRep.formatter
-        
-        self.viewRep.isActive = isEditing
-        
-        if !isEditing {
-            f.minimumFractionDigits = self.definedMinimumFractionalDigits
-            f.alwaysShowsDecimalSeparator = false
-        }
-    }
+
+public extension NumberTextField.Coordinator {
     
     /**
      Set the decimal separator condition.
@@ -47,20 +29,20 @@ extension NumberTextFieldViewRep.Coordinator {
      text property.
      */
     internal func _setDecimalSeparator(_ textField: UITextField) {
-        guard self.isEditing else { return }
+        guard isEditing else { return }
         
-        guard self.viewRep.formatter.maximumFractionDigits > 0,
+        guard parent.formatter.maximumFractionDigits > 0,
               let text = textField.text
         else {
-            self.viewRep.formatter.alwaysShowsDecimalSeparator = false
+            parent.formatter.alwaysShowsDecimalSeparator = false
             return
         }
         
-        if text.contains(self.decimalChar) {
-            self.viewRep.formatter.alwaysShowsDecimalSeparator = true
+        if text.contains(decimalChar) {
+            parent.formatter.alwaysShowsDecimalSeparator = true
             
         } else {
-            self.viewRep.formatter.alwaysShowsDecimalSeparator = false
+            parent.formatter.alwaysShowsDecimalSeparator = false
         }
     }
     
@@ -81,37 +63,38 @@ extension NumberTextFieldViewRep.Coordinator {
      text property.
      */
     internal func _setMinimumFractionalDigits(_ textField: UITextField) {
-        guard self.isEditing else { return }
+        guard parent.isActive else { return }
         
         guard let text = textField.text,
               text.contains(self.decimalChar)
         else {
-            self.viewRep.formatter.minimumFractionDigits = 0
+            parent.formatter.minimumFractionDigits = 0
             return
         }
         
-        let numString = self.filter(text)
-        let formatter = self.viewRep.formatter
+        let numString = filter(text)
         let numChars = "1234567890"
+        
         /**
          Separate the number into whole and fractional parts.
          Get the count of the fractional numbers.
          Set the `minimumFractionalDigits` property according to the condition.
          */
-        let separatorIndex = numString.firstIndex(of: self.decimalChar)!
+        let separatorIndex = numString.firstIndex(of: decimalChar)!
         let fractionalNumbers = numString[separatorIndex...].filter { numChars.contains($0) }
         
-        if fractionalNumbers.count < formatter.maximumFractionDigits {
-            formatter.minimumFractionDigits = fractionalNumbers.count
+        if fractionalNumbers.count < parent.formatter.maximumFractionDigits {
+            parent.formatter.minimumFractionDigits = fractionalNumbers.count
         } else {
-            formatter.minimumFractionDigits = formatter.maximumFractionDigits
+            parent.formatter.minimumFractionDigits = parent.formatter.maximumFractionDigits
         }
     }
 }
 
 
 // MARK: - Filter
-extension NumberTextFieldViewRep.Coordinator {
+
+extension NumberTextField.Coordinator {
     /**
      Filter a string and return a `NumberString`
      
@@ -125,7 +108,7 @@ extension NumberTextFieldViewRep.Coordinator {
      */
     internal func filter(_ s: String) -> NumberString {
         let numberChars: String = "0123456789"
-        guard s.contains(self.decimalChar)
+        guard s.contains(decimalChar)
         else {  /// No decimal char found.
             return s.filter { numberChars.contains($0)}
         }
@@ -135,16 +118,17 @@ extension NumberTextFieldViewRep.Coordinator {
          Separate the number into whole and fractional parts.
          Filter both parts, then return the combined string.
          */
-        let firstIndex = s.firstIndex(of: self.decimalChar)!
+        let firstIndex = s.firstIndex(of: decimalChar)!
         let wholeNumbers = s[..<firstIndex].filter { numberChars.contains($0)}
         let fractionalNumbers = s[firstIndex...].filter { numberChars.contains($0)}
-        return "\(wholeNumbers)" + "\(self.decimalChar)" + "\(fractionalNumbers)"
+        return "\(wholeNumbers)" + "\(decimalChar)" + "\(fractionalNumbers)"
     }
 }
 
 
 // MARK: - Cursor
-extension NumberTextFieldViewRep.Coordinator {
+
+extension NumberTextField.Coordinator {
     /**
      Move the cursor of the `UITextField` within the boundaries of the formatted number.
      
@@ -162,7 +146,7 @@ extension NumberTextFieldViewRep.Coordinator {
         var range: [Int] = [0, 0]
         var startIsFound: Bool = false
         
-        let characters = "1234567890\(self.decimalChar)\(self.groupingChar)"
+        let characters = "1234567890\(decimalChar)\(groupingChar)"
         
         for (index, char) in text.enumerated() {
             if characters.contains(char) {
@@ -178,14 +162,18 @@ extension NumberTextFieldViewRep.Coordinator {
             }
         }
         
+        /// Get the bounds of where the cursor can be placed.
         guard let leadingOffset = textField.position(from: textField.beginningOfDocument, offset: range[0]),
               let trailingOffset = textField.position(from: textField.beginningOfDocument, offset: range[1])
         else {
             return
         }
-        // $12.34
-        // lead = 1 trail = 5
-        //
+        /**
+         Example of leading and trailing offsets.
+         $12.34
+         leading = 1
+         trailing = 5
+         */
         if cursorPosition < range[0] {
             textField.selectedTextRange = textField.textRange(from: leadingOffset, to: leadingOffset)
         
