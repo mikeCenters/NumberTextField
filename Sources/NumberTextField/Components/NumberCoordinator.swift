@@ -9,43 +9,53 @@ import UIKit
 
 // MARK: - Coordinator
 
-public extension NumberTextFieldViewRep {
-    class Coordinator: NSObject, UITextFieldDelegate {
-        var viewRep: NumberTextFieldViewRep
+public extension NumberTextField {
+    
+    final class Coordinator: NSObject, UITextFieldDelegate {
+        
+        public var parent: NumberTextField
+        
+        // MARK: - Helper Properties
         
         /// The decimal character for decimal values.
         internal var decimalChar: String.Element {
-            return Character(self.viewRep.formatter.decimalSeparator ?? "")
-        }
+            Character(parent.formatter.decimalSeparator ?? "") }
+        
         /// The grouping character for decimal values.
         internal var groupingChar: String.Element {
-            return Character(self.viewRep.formatter.groupingSeparator ?? "")
-        }
+            Character(parent.formatter.groupingSeparator ?? "") }
+        
         /// The currency character for decimal values.
         internal var currencyChar: String.Element {
-            return Character(self.viewRep.formatter.currencySymbol ?? "")
-        }
+            Character(parent.formatter.currencySymbol ?? "") }
+        
         /// The percent character for decimal values.
         internal var percentChar: String.Element {
-            return Character(self.viewRep.formatter.percentSymbol ?? "")
-        }
-        /// The locale of the text field `NumberFormatter`.
-        internal var locale: Locale {
-            return self.viewRep.formatter.locale
-        }
+            Character(parent.formatter.percentSymbol ?? "") }
         
+        /// The locale used for number formatting.
+        internal var locale: Locale {
+            parent.formatter.locale }
+        
+        internal var isEditing: Bool {
+            parent.isActive }
+        
+        
+        // MARK: - Controls
         /// The minimum fractional digits initially set via the provided `NumberFormatter`.
         internal var definedMinimumFractionalDigits: Int
-        /// The state of text field editing.
-        internal var isEditing: Bool {
-            return self.viewRep.isActive
+        
+        
+        // MARK: - Init
+        
+        init(_ parent: NumberTextField) {
+            self.parent = parent
+            
+            self.definedMinimumFractionalDigits = parent.formatter.minimumFractionDigits
         }
         
         
-        init(_ viewRep: NumberTextFieldViewRep) {
-            self.viewRep = viewRep
-            self.definedMinimumFractionalDigits = viewRep.formatter.minimumFractionDigits
-        }
+        // MARK: - Setup
         
         /**
          Setup the `Coordinator`.
@@ -70,12 +80,14 @@ public extension NumberTextFieldViewRep {
 
 
 // MARK: - Delegate Methods
-public extension NumberTextFieldViewRep.Coordinator {
-    @objc
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+
+public extension NumberTextField.Coordinator {
+    
+    @objc func textFieldDidBeginEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
-            self.textField(isEditing: true)
-            self.updateText(textField, decimal: self.viewRep.value)
+            self.parent.isActive = true
+            
+            self.updateText(textField, decimal: self.parent.value)
             
             if let text = textField.text {
                 self.moveCursorWithinBounds(textField, cursorPosition: text.count)
@@ -83,14 +95,14 @@ public extension NumberTextFieldViewRep.Coordinator {
         }
     }
     
-    @objc
-    func textFieldDidChange(_ textField: UITextField) {
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
         DispatchQueue.main.async {
             self._setDecimalSeparator(textField)
             self._setMinimumFractionalDigits(textField)
             
             self.updateValue(textField)
-            self.updateText(textField, decimal: self.viewRep.value)
+            self.updateText(textField, decimal: self.parent.value)
             
             /// Check if cursor is within bounds.
             if let range = textField.selectedTextRange?.start {
@@ -98,21 +110,24 @@ public extension NumberTextFieldViewRep.Coordinator {
                 self.moveCursorWithinBounds(textField, cursorPosition: cursorPosition)
             }
             
-            self.viewRep.onChange(self.viewRep.value)
         }
     }
     
-    @objc
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    
+    @objc func textFieldDidEndEditing(_ textField: UITextField) {
         DispatchQueue.main.async {
-            self.textField(isEditing: false)
-            self.updateText(textField, decimal: self.viewRep.value)
-            self.viewRep.onCommit(self.viewRep.value)
+            self.parent.isActive = false
+            
+            self.parent.formatter.minimumFractionDigits = self.definedMinimumFractionalDigits
+            self.parent.formatter.alwaysShowsDecimalSeparator = false
+            
+            self.updateText(textField, decimal: self.parent.value)
+            self.parent.onCommit(self.parent.value)
         }
     }
     
-    @objc
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    
+    @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
