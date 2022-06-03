@@ -7,8 +7,8 @@
 
 import UIKit
 
-class UIOpenTextField: UITextField {
-    override var selectedTextRange: UITextRange? {
+public class UIOpenTextField: UITextField {
+    override public var selectedTextRange: UITextRange? {
         get { return super.selectedTextRange }
         set {
             self.publishCursor(newPosition: newValue)
@@ -17,7 +17,7 @@ class UIOpenTextField: UITextField {
     }
     
     // MARK: - Cursor Position Change
-    var onCursorPositionChange: ((Int) -> ())?
+    public var onCursorPositionChange: ((Int) -> ())?
     
     private func publishCursor(newPosition range: UITextRange?) {
         guard let range = range?.start else { return }
