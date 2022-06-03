@@ -155,20 +155,6 @@ Create an input accessory view that is bound to the keyboard.
     - Inserting still works.
     - This does not break the text field; however, the cursor retaining the position is necessary.
 
-#### Access Control
-- The package needs to be scanned for access control of stuctures and classes prior to major release.
-
-#### ViewRep.UpdateUI
-- Will require a catch to check for changes prior to calling the updateText() method.
-    - At current, UpdateText() is called twice on every change.
-        - The way updating UITextField.text is designed, the value is formatted and assigned to the text field.
-
-- A resolution to this would be: When the onChange delegate event is called:
-    - Update the text first with proper formatting, then assign the value.
-    - When the updateUIView method is called, check for changes in the value and text before calling the updateText() method.
-
-- updateUIView is required to assign the initial text and update the text field when external changes in value occur.
-
 ```swift
 func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<NumberTextFieldViewRep>) {
     // Insert a check for change in uiView.text
@@ -180,6 +166,14 @@ func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<Num
 
 
 # Change Log
+## v0.3.0
+- Resolved an issue with the `.updateUIView()` method not triggering during outside state changes.
+    - Example: Setting `@State var value: Decimal?` to nil with a "clear" button.
+    - This is now resolved.
+- Removed the SwiftUI View as entry to utilize the NumberTextField View Representable.
+    - NumberTextFieldViewRep is renamed to NumberTextField.
+- Code cleanup.
+
 ## v0.2.2
 - Resolved error with the NumberTextField not updating on certain model changes.
 
