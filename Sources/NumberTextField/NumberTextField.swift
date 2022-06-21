@@ -69,10 +69,18 @@ public struct NumberTextField: UIViewRepresentable {
         
         /// Set first responder
         if isActive {
-            textField.becomeFirstResponder()
+            if !textField.isFirstResponder {
+                DispatchQueue.main.async {
+                    textField.becomeFirstResponder()
+                }
+            }
             
         } else {
-            textField.resignFirstResponder()
+            if textField.isFirstResponder {
+                DispatchQueue.main.async {
+                    textField.resignFirstResponder()
+                }
+            }
         }
     }
 }
