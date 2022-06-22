@@ -31,7 +31,10 @@ extension View {
     
     /// Set the environment value of `NumberTextField_InputAccessory`.
     @inlinable public func inputAccessory<Content: View>(@ViewBuilder content: () -> Content) -> some View {
-        environment(\.numberTextField_InputAccessory, UIHostingController(rootView: content()).view)
+        let controller = UIHostingController(rootView: content())
+        let view = controller.view
+        
+        return environment(\.numberTextField_InputAccessory, view)
     }
 }
 

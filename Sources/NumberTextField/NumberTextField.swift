@@ -104,11 +104,37 @@ extension NumberTextField {
         textField.font = environment.numberTextField_Font
         textField.textColor = UIColor(environment.numberTextField_TextColor)
         
+        let inputAccessory = environment.numberTextField_InputAccessory
+        setInputAccessory(textField, accessory: inputAccessory)
+    }
+    
+    /**
+     Set the input accessory of the text field.
+     
+     The method forces the intrinsic content size to be applied to the input accessories constraints to resolve
+     an issue with improper rendering of the view's height.
+     
+     - parameter textField: The text field that the input accessory will be applied to.
+     - parameter accessory: The input accessory that will be applied to the text field.
+     */
+    private func setInputAccessory(_ textField: UITextField, accessory: UIView?) {
+        guard let view = accessory
+        else {
+            textField.inputAccessoryView = nil
+            return
+        }
         
-        let accessory = environment.numberTextField_InputAccessory
-        accessory?.translatesAutoresizingMaskIntoConstraints = false
-        accessory?.frame = textField.bounds
-        textField.inputAccessoryView = environment.numberTextField_InputAccessory
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Set the intrinsic size of the view, to the constraints of the view.
+        let size = view.intrinsicContentSize
+        
+        NSLayoutConstraint.activate([
+            view.widthAnchor.constraint(equalToConstant: size.width),
+            view.heightAnchor.constraint(equalToConstant: size.height)
+        ])
+        
+        textField.inputAccessoryView = view
     }
 }
 
@@ -128,6 +154,7 @@ struct SomeContainer: View {
     @State private var value: Decimal?
     @State private var isActive: Bool = false
     
+    @State private var isActiveTwo: Bool = false
     
     var body: some View {
         VStack(spacing: 16) {
@@ -139,6 +166,7 @@ struct SomeContainer: View {
                     Text("Toggle First Responder")
                 }
             }
+            
             Text("Raw value: \(value?.description ?? "nil")")
             
             NumberTextField(
@@ -149,7 +177,6 @@ struct SomeContainer: View {
                     
                 }
                 .background(Color(.secondarySystemBackground))
-            
             
             VStack {
                 Text("Change value to 123456.789")
